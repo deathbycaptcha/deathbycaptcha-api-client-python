@@ -1,0 +1,16 @@
+venv/
+.venv/
+.idea/
+.vscode/
+build
+dist
+src/deathbycaptcha.egg-info
+src/deathbycaptcha_deathbycaptvha_DBC.egg-info/
+src/deathbycaptcha/__pycache__/
+src/deathbycaptcha_official.egg-info/
+.gitlab-ci-local/
+htmlcov/
+.gitlab-ci-local/
+.coverage
+tests/__pycache__/
+agents/__pycache__/

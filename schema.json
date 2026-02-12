@@ -1,0 +1,359 @@
+{
+  "api": {
+    "name": "DeathByCaptcha API Client",
+    "version": "4.7.0",
+    "description": "Python client library for DeathByCaptcha CAPTCHA solving service",
+    "repository": "https://github.com/deathbycaptcha/deathbycaptcha-api-client-python",
+    "license": "MIT",
+    "baseUrl": "http://api.dbcapi.me/api",
+    "socketHost": "api.dbcapi.me",
+    "socketPorts": [8123, 8124, 8125, 8126, 8127, 8128, 8129, 8130]
+  },
+  "classes": {
+    "Client": {
+      "type": "base_class",
+      "description": "Abstract base class for DeathByCaptcha API clients",
+      "constructors": [
+        {
+          "name": "__init__",
+          "parameters": [
+            {
+              "name": "username",
+              "type": "string",
+              "required": false,
+              "description": "DBC account username"
+            },
+            {
+              "name": "password",
+              "type": "string",
+              "required": false,
+              "description": "DBC account password"
+            },
+            {
+              "name": "authtoken",
+              "type": "string",
+              "required": false,
+              "description": "Alternative authentication token"
+            }
+          ]
+        }
+      ],
+      "methods": [
+        {
+          "name": "get_user",
+          "description": "Fetch user details (ID, balance, rate, banned status)",
+          "parameters": [],
+          "returns": {
+            "type": "dict",
+            "keys": {
+              "user": {"type": "int", "description": "Account numeric ID"},
+              "balance": {"type": "int", "description": "Balance in US cents"},
+              "rate": {"type": "float", "description": "Cost per CAPTCHA in US cents"},
+              "is_banned": {"type": "bool", "description": "Account suspension flag"}
+            }
+          },
+          "raises": ["AccessDeniedException", "RuntimeError"]
+        },
+        {
+          "name": "get_balance",
+          "description": "Fetch user balance in US cents",
+          "parameters": [],
+          "returns": {
+            "type": "int",
+            "description": "Balance in US cents"
+          },
+          "raises": ["AccessDeniedException"]
+        },
+        {
+          "name": "get_captcha",
+          "description": "Fetch CAPTCHA details by ID",
+          "parameters": [
+            {
+              "name": "cid",
+              "type": "int",
+              "required": true,
+              "description": "CAPTCHA numeric ID"
+            }
+          ],
+          "returns": {
+            "type": "dict",
+            "keys": {
+              "captcha": {"type": "int", "description": "CAPTCHA numeric ID"},
+              "text": {"type": "string", "description": "Solved CAPTCHA text (null if not solved yet)"},
+              "is_correct": {"type": "bool", "description": "Whether solution is correct"}
+            }
+          },
+          "raises": ["RuntimeError"]
+        },
+        {
+          "name": "get_text",
+          "description": "Fetch CAPTCHA text by ID",
+          "parameters": [
+            {
+              "name": "cid",
+              "type": "int",
+              "required": true,
+              "description": "CAPTCHA numeric ID"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "CAPTCHA text or None if not solved"
+          },
+          "raises": ["RuntimeError"]
+        },
+        {
+          "name": "upload",
+          "description": "Upload a CAPTCHA image for solving",
+          "parameters": [
+            {
+              "name": "captcha",
+              "type": "string | file_like_object",
+              "required": true,
+              "description": "File path or file-like object with read() method"
+            }
+          ],
+          "returns": {
+            "type": "dict",
+            "description": "CAPTCHA details (see get_captcha)"
+          },
+          "raises": ["ValueError", "TypeError", "AccessDeniedException"]
+        },
+        {
+          "name": "decode",
+          "description": "Upload and solve CAPTCHA with polling",
+          "parameters": [
+            {
+              "name": "captcha",
+              "type": "string | file_like_object",
+              "required": true,
+              "description": "File path or file-like object with read() method"
+            },
+            {
+              "name": "timeout",
+              "type": "int",
+              "required": false,
+              "default": 60,
+              "description": "Maximum time to wait for solution in seconds"
+            },
+            {
+              "name": "**kwargs",
+              "type": "dict",
+              "required": false,
+              "description": "Additional CAPTCHA parameters (banner, token_params, etc.)"
+            }
+          ],
+          "returns": {
+            "type": "dict | None",
+            "description": "CAPTCHA details if solved, None otherwise"
+          },
+          "raises": ["ValueError", "TypeError", "AccessDeniedException", "TimeoutError"]
+        },
+        {
+          "name": "report",
+          "description": "Report incorrectly solved CAPTCHA for refund",
+          "parameters": [
+            {
+              "name": "cid",
+              "type": "int",
+              "required": true,
+              "description": "CAPTCHA numeric ID"
+            }
+          ],
+          "returns": {
+            "type": "bool",
+            "description": "True if reported successfully"
+          },
+          "raises": ["RuntimeError"]
+        },
+        {
+          "name": "close",
+          "description": "Close client connection (if applicable)",
+          "parameters": [],
+          "returns": {"type": "None"}
+        },
+        {
+          "name": "connect",
+          "description": "Establish connection (if applicable)",
+          "parameters": [],
+          "returns": {"type": "None"}
+        }
+      ]
+    },
+    "SocketClient": {
+      "type": "class",
+      "extends": "Client",
+      "description": "Socket API client - recommended for agents, persistent connection",
+      "characteristics": {
+        "thread_safe": true,
+        "persistent_connection": true,
+        "lower_latency": true,
+        "best_for": ["long_running_processes", "high_volume_solving"]
+      },
+      "additional_methods": [
+        {
+          "name": "connect",
+          "description": "Establish persistent socket connection to DBC API",
+          "parameters": [],
+          "returns": {"type": "socket.socket"}
+        },
+        {
+          "name": "close",
+          "description": "Close socket connection gracefully",
+          "parameters": [],
+          "returns": {"type": "None"}
+        }
+      ]
+    },
+    "HttpClient": {
+      "type": "class",
+      "extends": "Client",
+      "description": "HTTP API client - stateless, good for serverless",
+      "characteristics": {
+        "stateless": true,
+        "lower_memory": true,
+        "serverless_friendly": true,
+        "best_for": ["serverless_functions", "simple_workflows", "occasional_solving"]
+      }
+    }
+  },
+  "exceptions": {
+    "AccessDeniedException": {
+      "description": "Authentication failed or insufficient balance",
+      "base": "Exception",
+      "causes": [
+        "Invalid username/password",
+        "Account has zero or negative balance",
+        "Account is banned"
+      ]
+    },
+    "ValueError": {
+      "description": "Invalid CAPTCHA image or format",
+      "causes": [
+        "Empty image file",
+        "Unsupported image format",
+        "Invalid CAPTCHA parameters"
+      ]
+    },
+    "TypeError": {
+      "description": "Invalid image type",
+      "causes": [
+        "Image format not supported",
+        "Invalid file-like object"
+      ]
+    },
+    "OverflowError": {
+      "description": "Service overloaded (HTTP 503)",
+      "causes": [
+        "DBC service at capacity",
+        "Too many requests from your account"
+      ],
+      "recommendation": "Retry with exponential backoff"
+    },
+    "RuntimeError": {
+      "description": "Invalid API response or network error",
+      "causes": [
+        "Network connectivity issue",
+        "API server error",
+        "Malformed response"
+      ]
+    }
+  },
+  "constants": {
+    "API_VERSION": {
+      "type": "string",
+      "value": "DBC/Python v4.7.0"
+    },
+    "DEFAULT_TIMEOUT": {
+      "type": "int",
+      "value": 60,
+      "description": "Default CAPTCHA solving timeout in seconds"
+    },
+    "DEFAULT_TOKEN_TIMEOUT": {
+      "type": "int",
+      "value": 120,
+      "description": "Default token solving timeout in seconds"
+    },
+    "POLLS_INTERVAL": {
+      "type": "list[int]",
+      "value": [1, 1, 2, 3, 2, 2, 3, 2, 2],
+      "description": "Polling intervals in seconds for status checks"
+    },
+    "DFLT_POLL_INTERVAL": {
+      "type": "int",
+      "value": 3,
+      "description": "Default polling interval after exhausting POLLS_INTERVAL"
+    },
+    "HTTP_BASE_URL": {
+      "type": "string",
+      "value": "http://api.dbcapi.me/api"
+    },
+    "SOCKET_HOST": {
+      "type": "string",
+      "value": "api.dbcapi.me"
+    },
+    "SOCKET_PORTS": {
+      "type": "list[int]",
+      "value": [8123, 8124, 8125, 8126, 8127, 8128, 8129, 8130]
+    }
+  },
+  "common_workflows": {
+    "check_balance": {
+      "description": "Check account balance before solving",
+      "steps": [
+        "Instantiate client",
+        "Call get_balance()",
+        "Check if balance > 0"
+      ],
+      "cost": "Free"
+    },
+    "solve_simple_captcha": {
+      "description": "Solve a standard image CAPTCHA",
+      "steps": [
+        "Instantiate client",
+        "Call decode(image_path, timeout=60)",
+        "Extract text from response"
+      ],
+      "cost": "$0.005 - $0.05"
+    },
+    "batch_solve_captchas": {
+      "description": "Solve multiple CAPTCHAs efficiently",
+      "steps": [
+        "Create SocketClient (reuse for multiple calls)",
+        "Iterate over images",
+        "Call decode() for each",
+        "Track balance to avoid overspending",
+        "Close client when done"
+      ]
+    },
+    "handle_failures": {
+      "description": "Robust error handling",
+      "steps": [
+        "Wrap decode() in try-except",
+        "Handle AccessDeniedException separately",
+        "Implement exponential backoff for retries",
+        "Log errors for debugging"
+      ]
+    }
+  },
+  "examples": {
+    "basic_usage": {
+      "language": "python",
+      "code": "import deathbycaptcha\nclient = deathbycaptcha.SocketClient('username', 'password')\nresult = client.decode('captcha.png', timeout=60)\nif result:\n    print(f'CAPTCHA: {result[\"text\"]}')\nclient.close()"
+    },
+    "batch_processing": {
+      "language": "python",
+      "code": "client = deathbycaptcha.SocketClient('username', 'password')\nimages = ['cap1.png', 'cap2.png', 'cap3.png']\nfor img in images:\n    r = client.decode(img)\n    if r: print(f'{img}: {r[\"text\"]}')\nclient.close()"
+    },
+    "error_handling": {
+      "language": "python",
+      "code": "try:\n    result = client.decode('captcha.png')\nexcept deathbycaptcha.AccessDeniedException:\n    print('Auth failed')\nexcept ValueError:\n    print('Invalid image')\nexcept Exception as e:\n    print(f'Error: {e}')"
+    }
+  },
+  "performance_metrics": {
+    "typical_solve_time": "5-30 seconds",
+    "api_response_time": "100-500ms",
+    "cost_per_captcha": "$0.005 - $0.15",
+    "max_concurrent_requests": "Unlimited (pay per solve)"
+  }
+}

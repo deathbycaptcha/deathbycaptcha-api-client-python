@@ -1,0 +1,47 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+[project]
+name = "deathbycaptcha-official"
+version = "4.7.0"
+description = "Official DeathByCaptcha API Client Library"
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "MIT"}
+authors = [
+    {name = "DBC Developers Team", email = "deathbycaptcha@protonmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests>=2.25.1",
+    "simplejson>=3.17.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.12.0",
+    "coverage>=5.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/deathbycaptcha/deathbycaptcha-api-client-python"
+"Bug Tracker" = "https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/issues"
+Repository = "https://github.com/deathbycaptcha/deathbycaptcha-api-client-python"

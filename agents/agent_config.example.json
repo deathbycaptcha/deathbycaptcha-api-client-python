@@ -1,0 +1,19 @@
+{
+  "dbc": {
+    "username": "your_dbc_username",
+    "password": "your_dbc_password",
+    "client_type": "socket",
+    "verbose": false,
+    "auto_close": false
+  },
+  "agent": {
+    "max_concurrent_solvers": 3,
+    "timeout_seconds": 60,
+    "retry_attempts": 2,
+    "min_balance_for_batch": 100
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}
