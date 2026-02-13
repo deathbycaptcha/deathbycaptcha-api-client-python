@@ -79,7 +79,7 @@ Example:
 
 ```python
 import unittest
-from deathbycaptcha.deathbycaptcha import HttpClient
+from deathbycaptcha import HttpClient
 
 class TestMyFeature(unittest.TestCase):
     def test_something(self):
