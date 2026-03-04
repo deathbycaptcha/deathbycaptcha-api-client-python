@@ -53,20 +53,32 @@ The integration tests in `tests/test_integration_balance.py` will use these envi
 - Allow-failure: doesn't block PRs if it fails
 - Tests compatibility with upcoming Python versions
 
-##### 3. **test-image-captcha-python3-14** - Python 3.14 specialized integration ⭐
+##### 3. **test-image-captcha-python3-14** - Python 3.14 coverage badge generation ⭐
 
-**Purpose:** Deep validation of text CAPTCHA polling operations and async handling on Python 3.14
+**Purpose:** Generate comprehensive coverage badge from full test suite on Python 3.14
 
 **What it tests:**
-- Uploading text CAPTCHAs to the DeathByCaptcha API
-- Polling for solutions with exponential backoff retry logic
-- Timeout handling and edge cases
+- Runs complete test suite (all test files)
+- Generates coverage report for entire codebase
+- Creates and commits coverage badge SVG
 - Both HTTP and Socket client implementations
 - Critical features:
-  - `HttpClient.upload()` and polling loop
-  - `SocketClient.upload()` and polling loop
-  - Backoff timing and retry logic
-  - Response parsing and solution extraction
+  - Client initialization and authentication
+  - Error handling (HTTP codes, socket errors)
+  - Image detection and validation
+  - Balance and user info retrieval
+  - CAPTCHA upload and polling
+  - Integration tests with real API
+
+**Badge Generation:**
+- Parses `coverage.xml` to calculate line coverage percentage
+- Generates SVG badge with color coding:
+  - Green (≥90%)
+  - Yellow-green (≥75%)
+  - Orange (≥60%)
+  - Red (<60%)
+- Commits badge to `.github/badges/coverage.svg`
+- Displayed in README.md
 
 **Coverage metrics:**
 - Focuses on API interaction and polling code paths

@@ -89,14 +89,18 @@ The project includes `.github/workflows/tests.yml` which automatically runs test
 
 #### Special Test Jobs
 - **test-python3-15**: Runs on Python 3.15 RC (continue-on-error)
-- **test-image-captcha-python3-14**: Python 3.14 specific job that:
-  - Uploads normal image CAPTCHAs (`type=0`) to the API
-  - Polls for solutions with exponential backoff
-  - Validates polling behavior
-  - Tests both HTTP and Socket clients
+- **test-image-captcha-python3-14**: Python 3.14 job that:
+  - Runs complete test suite (all test files)
+  - Generates comprehensive coverage report
+  - Creates coverage badge for README
+  - Tests all client functionality including:
+    - Image CAPTCHA upload (type=0) with polling
+    - Balance and user info retrieval
+    - Error handling and edge cases
+    - Both HTTP and Socket clients
 
 
-The text CAPTCHA test in Python 3.14 ensures new versions of Python work correctly with API polling and timeout handling.
+The Python 3.14 job generates the coverage badge displayed in the README, showing overall test coverage across the entire codebase.
 
 **Coverage Details for Python 3.14 Job:**
 - Generates code coverage reports specifically for polling operations

@@ -107,17 +107,17 @@ jobs:
         pip install -e .
         pip install pytest pytest-cov
     
-    - name: Run image CAPTCHA (type=0) integration tests (Python 3.14)
+    - name: Run all tests with coverage (Python 3.14)
       env:
         DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
-      run: python -m pytest tests/test_image_captcha_integration.py -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --cov-report=html --junit-xml=report.xml
+      run: python -m pytest tests/ -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --cov-report=html --junit-xml=report.xml
     
     - name: Upload coverage reports and test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: image-captcha-test-results-py3.14
+        name: coverage-badge-test-results-py3.14
         path: |
           report.xml
           coverage.xml
