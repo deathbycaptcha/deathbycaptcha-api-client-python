@@ -12,5 +12,11 @@ src/deathbycaptcha_official.egg-info/
 htmlcov/
 .gitlab-ci-local/
 .coverage
+coverage.xml
+report.xml
 tests/__pycache__/
 agents/__pycache__/
+
+# Environment variables
+.env
+.env.local

@@ -4,6 +4,9 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  # DBC Integration Test Credentials (must be configured in GitLab CI/CD settings)
+  DBC_TEST_USERNAME: ${DBC_USERNAME}
+  DBC_TEST_PASSWORD: ${DBC_PASSWORD}
 
 cache:
   paths:

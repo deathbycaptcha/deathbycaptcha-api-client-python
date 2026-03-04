@@ -4,19 +4,31 @@ This test module contains realistic tests that make actual HTTP and Socket API
 requests to the Death by Captcha service. These tests use a test account with
 no real balance.
 
-Test account credentials:
-    Username: dbcpiptests
-    Password: KFJiugf.d432.3uyf
+Configuration:
+    Set credentials via environment variables:
+    - DBC_TEST_USERNAME: Your DBC account username
+    - DBC_TEST_PASSWORD: Your DBC account password
+    
+    Or create a .env file (see .env.sample for template)
 """
 
 import unittest
 import time
+import os
 from deathbycaptcha import (
     HttpClient,
     SocketClient,
     AccessDeniedException,
     API_VERSION
 )
+
+# Load environment variables from .env file if available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, using system environment variables only
+    pass
 
 
 class TestHttpClientRealBalance(unittest.TestCase):
@@ -25,8 +37,13 @@ class TestHttpClientRealBalance(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up test fixtures for HTTP client tests."""
-        cls.username = 'dbcpiptests'
-        cls.password = 'KFJiugf.d432.3uyf'
+        cls.username = os.getenv('DBC_TEST_USERNAME')
+        cls.password = os.getenv('DBC_TEST_PASSWORD')
+        if not cls.username or not cls.password:
+            raise ValueError(
+                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
+                "environment variables or create a .env file."
+            )
         cls.client = None
 
     def setUp(self):
@@ -146,8 +163,13 @@ class TestSocketClientRealBalance(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up test fixtures for Socket client tests."""
-        cls.username = 'dbcpiptests'
-        cls.password = 'KFJiugf.d432.3uyf'
+        cls.username = os.getenv('DBC_TEST_USERNAME')
+        cls.password = os.getenv('DBC_TEST_PASSWORD')
+        if not cls.username or not cls.password:
+            raise ValueError(
+                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
+                "environment variables or create a .env file."
+            )
         cls.client = None
 
     def setUp(self):
@@ -280,8 +302,13 @@ class TestHttpVsSocketConsistency(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up test fixtures."""
-        cls.username = 'dbcpiptests'
-        cls.password = 'KFJiugf.d432.3uyf'
+        cls.username = os.getenv('DBC_TEST_USERNAME')
+        cls.password = os.getenv('DBC_TEST_PASSWORD')
+        if not cls.username or not cls.password:
+            raise ValueError(
+                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
+                "environment variables or create a .env file."
+            )
 
     def test_http_and_socket_balance_consistency(self):
         """Test that both HTTP and Socket clients return the same balance."""

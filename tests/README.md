@@ -12,6 +12,29 @@ pip install -e ".[dev]"
 
 This installs the package in editable mode with development dependencies including `pytest` and `coverage`.
 
+### Configuring Test Credentials
+
+For integration tests that require API credentials:
+
+1. **Copy the environment template:**
+   ```bash
+   cp .env.sample .env
+   ```
+
+2. **Edit `.env` and add your credentials:**
+   ```bash
+   DBC_TEST_USERNAME=your_username
+   DBC_TEST_PASSWORD=your_password
+   ```
+
+3. **Alternative: Use environment variables directly:**
+   ```bash
+   export DBC_TEST_USERNAME=your_username
+   export DBC_TEST_PASSWORD=your_password
+   ```
+
+⚠️ **Important:** The `.env` file is in `.gitignore` and will never be committed to version control. Keep your credentials secure!
+
 ### Using unittest (built-in)
 
 ```bash
@@ -42,8 +65,60 @@ Current test coverage includes:
   - Validates API version, timeouts, and other constants
   - Ensures configuration values are within expected ranges
 
+- **test_integration_balance.py** - Integration tests (requires credentials)
+  - Tests real API calls for get_balance() and get_user()
+  - Tests both HTTP and Socket clients
+  - Validates consistency between client types
+
+- **test_image_captcha_integration.py** - Image CAPTCHA integration tests (requires credentials)
+  - Uploads normal image CAPTCHAs (`type=0`) and polls for solutions
+  - Tests both HTTP and Socket clients with polling backoff
+  - Validates solution retrieval with exponential backoff
+  - Runs only on Python 3.14 in GitHub Actions as a compatibility test
+
 ## CI/CD Integration
 
+### GitHub Actions
+
+The project includes `.github/workflows/tests.yml` which automatically runs tests on every push/PR:
+
+#### Main Test Job
+- Runs on Python versions: 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14
+- Runs full test suite with code coverage
+- Uploads coverage reports
+
+#### Special Test Jobs
+- **test-python3-15**: Runs on Python 3.15 RC (continue-on-error)
+- **test-image-captcha-python3-14**: Python 3.14 specific job that:
+  - Uploads normal image CAPTCHAs (`type=0`) to the API
+  - Polls for solutions with exponential backoff
+  - Validates polling behavior
+  - Tests both HTTP and Socket clients
+
+
+The text CAPTCHA test in Python 3.14 ensures new versions of Python work correctly with API polling and timeout handling.
+
+**Coverage Details for Python 3.14 Job:**
+- Generates code coverage reports specifically for polling operations
+- Coverage focus areas:
+  - `deathbycaptcha.HttpClient.upload()` and polling loop
+  - `deathbycaptcha.SocketClient.upload()` and polling loop  
+  - Exponential backoff retry logic
+  - Timeout and exception handling
+  - Response parsing and data extraction
+
+- Coverage artifacts generated:
+  - **XML format** (coverage.xml) - for CI/CD integration
+  - **HTML report** (htmlcov/) - for manual inspection
+  - **Test report** (report.xml) - JUnit XML format
+
+- Retained for **30 days** - allows tracking coverage trends over time
+
+  **Why this coverage is valuable:**
+  - Validates critical API interaction code
+  - Ensures polling logic handles edge cases
+  - Catches regressions in timeout handling
+  - Tests async/timing operations thoroughly
 ### GitLab CI
 
 The project includes a `.gitlab-ci.yml` file that automatically runs tests on:

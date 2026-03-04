@@ -1,10 +1,39 @@
 # [DeathByCaptcha](https://deathbycaptcha.com/)
 
 [![Tests](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
+[![Coverage](https://raw.githubusercontent.com/deathbycaptcha/deathbycaptcha-api-client-python/master/.github/badges/coverage.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
 
 ## Introduction
 DeathByCaptcha offers APIs of two types — HTTP and socket-based, with the latter being recommended for having faster responses and overall better performance. Switching between different APIs is usually as easy as changing the client class and/or package name, the interface stays the same.
 When using the socket API, please make sure that outgoing TCP traffic to *api.dbcapi.me* to the ports range *8123–8130* is not blocked on your side.
+
+## Supported CAPTCHA Types
+
+The DeathByCaptcha API supports solving the following CAPTCHA types:
+
+| Type ID | CAPTCHA Type | Parameters | Use Case |
+|---------|-------------|-----------|----------|
+| 0 | Standard Image | `captchafile` or `captcha` (base64) | Basic image CAPTCHA |
+| 2 | reCAPTCHA Coordinates | `captchafile` (screenshot) | Legacy reCAPTCHA coordinate selection |
+| 3 | Image Group | `banner`, `banner_text`, `captchafile` | Select images matching a description |
+| 4 | Token (v2) | `token_params` | reCAPTCHA v2 token solving |
+| 5 | reCAPTCHA v3 | `token_params` + `action`, `min_score` | reCAPTCHA v3 with risk scoring |
+| 8 | Geetest v3 | `geetest_params` | Geetest v3 verification |
+| 9 | Geetest v4 | `geetest_params` | Geetest v4 verification |
+| 11 | Text CAPTCHA | `textcaptcha` | Text-based question solving |
+| 12 | Cloudflare Turnstile | `turnstile_params` | Cloudflare Turnstile token |
+| 13 | Audio CAPTCHA | `audio` (base64), `language` | Audio CAPTCHA solving |
+| 14 | Lemin | `lemin_params` | Lemin CAPTCHA |
+| 15 | Capy | `capy_params` | Capy CAPTCHA |
+| 16 | Amazon WAF | `waf_params` | Amazon WAF verification |
+| 17 | Siara | `siara_params` | Siara CAPTCHA |
+| 18 | Mtcaptcha | `mtcaptcha_params` | Mtcaptcha CAPTCHA |
+| 19 | Cutcaptcha | `cutcaptcha_params` | Cutcaptcha CAPTCHA |
+| 20 | Friendly Captcha | `friendly_params` | Friendly Captcha |
+| 21 | Datadome | `datadome_params` | Datadome verification |
+| 23 | Tencent | `tencent_params` | Tencent CAPTCHA |
+| 24 | ATB | `atb_params` | ATB CAPTCHA |
+| 25 | reCAPTCHA v2 Enterprise | `token_enterprise_params` | reCAPTCHA v2 Enterprise tokens |
 
 ## Installation
 
@@ -83,6 +112,34 @@ try:
 except deathbycaptcha.AccessDeniedException:
     # Access to DBC API denied, check your credentials and/or balance
 ```
+
+## Credentials & Configuration
+
+For detailed information about setting up credentials for different environments, see [CREDENTIALS.md](CREDENTIALS.md):
+
+- **Local Development**: Use `.env` file with `pytest`
+- **gitlab-ci-local**: Test CI pipeline locally with `./run-gitlab-ci-local.sh`
+- **GitHub Actions**: Configure repository secrets
+- **GitLab CI**: Configure project CI/CD variables
+
+### Quick Setup
+
+```bash
+# 1. Copy template and add credentials
+cp .env.sample .env
+# Edit .env with your username and password
+
+# 2. Run tests locally (fastest)
+python -m pytest tests/ -v
+
+# 3. Test GitLab CI pipeline locally before pushing
+./run-gitlab-ci-local.sh
+
+# 4. Push to repo for GitHub Actions and GitLab CI
+git push
+```
+
+See [CREDENTIALS.md](CREDENTIALS.md) for complete setup instructions for each environment.
 
 ## Running the Examples
 

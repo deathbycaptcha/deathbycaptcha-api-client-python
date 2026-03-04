@@ -1,5 +1,8 @@
 name: Tests
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ main, master, develop ]
@@ -32,6 +35,9 @@ jobs:
         pip install coverage pytest pytest-cov
     
     - name: Run tests with coverage
+      env:
+        DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
+        DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
       run: python -m pytest tests/ -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --junit-xml=report.xml
     
     - name: Upload coverage reports
@@ -66,6 +72,9 @@ jobs:
         pip install coverage pytest pytest-cov
     
     - name: Run tests with coverage
+      env:
+        DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
+        DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
       run: python -m pytest tests/ -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --junit-xml=report.xml
     
     - name: Upload coverage reports
@@ -77,3 +86,106 @@ jobs:
           report.xml
           coverage.xml
         retention-days: 30
+
+  test-image-captcha-python3-14:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.14
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.14"
+    
+    - name: Display Python version
+      run: python -V
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install pytest pytest-cov
+    
+    - name: Run image CAPTCHA (type=0) integration tests (Python 3.14)
+      env:
+        DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
+        DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
+      run: python -m pytest tests/test_image_captcha_integration.py -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --cov-report=html --junit-xml=report.xml
+    
+    - name: Upload coverage reports and test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: image-captcha-test-results-py3.14
+        path: |
+          report.xml
+          coverage.xml
+          htmlcov/
+        retention-days: 30
+
+    - name: Generate coverage badge SVG
+      if: github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'develop')
+      run: |
+        python - << 'PY'
+        import os
+        import xml.etree.ElementTree as ET
+
+        tree = ET.parse('coverage.xml')
+        root = tree.getroot()
+
+        line_rate = float(root.attrib.get('line-rate', '0'))
+        pct = round(line_rate * 100)
+
+        if pct >= 90:
+            color = '#4c1'
+        elif pct >= 75:
+            color = '#97CA00'
+        elif pct >= 60:
+            color = '#dfb317'
+        else:
+            color = '#e05d44'
+
+        left_text = 'coverage'
+        right_text = f'{pct}%'
+
+        left_w = 78
+        right_w = 52
+        total_w = left_w + right_w
+
+        svg = "\n".join([
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="20" role="img" aria-label="{left_text}: {right_text}">',
+            '  <linearGradient id="s" x2="0" y2="100%">',
+            '    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>',
+            '    <stop offset="1" stop-opacity=".1"/>',
+            '  </linearGradient>',
+            f'  <clipPath id="r"><rect width="{total_w}" height="20" rx="3" fill="#fff"/></clipPath>',
+            '  <g clip-path="url(#r)">',
+            f'    <rect width="{left_w}" height="20" fill="#555"/>',
+            f'    <rect x="{left_w}" width="{right_w}" height="20" fill="{color}"/>',
+            f'    <rect width="{total_w}" height="20" fill="url(#s)"/>',
+            '  </g>',
+            '  <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" text-rendering="geometricPrecision" font-size="11">',
+            f'    <text x="{left_w/2}" y="15" fill="#010101" fill-opacity=".3">{left_text}</text>',
+            f'    <text x="{left_w/2}" y="14">{left_text}</text>',
+            f'    <text x="{left_w + right_w/2}" y="15" fill="#010101" fill-opacity=".3">{right_text}</text>',
+            f'    <text x="{left_w + right_w/2}" y="14">{right_text}</text>',
+            '  </g>',
+            '</svg>'
+        ]) + "\n"
+
+        os.makedirs('.github/badges', exist_ok=True)
+        with open('.github/badges/coverage.svg', 'w', encoding='utf-8') as f:
+            f.write(svg)
+        PY
+
+    - name: Commit coverage badge
+      if: github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'develop')
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .github/badges/coverage.svg
+        git diff --cached --quiet && exit 0
+        git commit -m "chore(ci): update coverage badge [skip ci]"
+        git push
+
