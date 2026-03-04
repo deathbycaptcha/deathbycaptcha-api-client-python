@@ -117,87 +117,74 @@ print(f"Banned: {user['is_banned']}")
 
 ## Advanced Agent Patterns
 
-### Pattern 1: Reliable CAPTCHA Solving with Retry
+### Pattern 1: Using CaptchaSolver Wrapper (Recommended for Agents)
 ```python
-def solve_captcha_with_retry(client, image_path, max_retries=3, timeout=60):
-    """Solve CAPTCHA with automatic retry on failure"""
-    for attempt in range(max_retries):
-        try:
-            captcha = client.decode(image_path, timeout=timeout)
-            if captcha and captcha.get('text'):
-                return captcha
-        except deathbycaptcha.AccessDeniedException:
-            raise  # Authentication error, don't retry
-        except Exception as e:
-            if attempt < max_retries - 1:
-                time.sleep(2 ** attempt)  # Exponential backoff
-            continue
-    return None
+from agents.agent_wrapper import CaptchaSolver
+
+# Using context manager for automatic cleanup
+with CaptchaSolver(username="your_username", password="your_password") as solver:
+    # Single CAPTCHA
+    result = solver.solve("captcha.png", timeout=60)
+    if result.success:
+        print(f"Solved: {result.text}")
+    else:
+        print(f"Error: {result.error}")
 ```
 
 ### Pattern 2: Batch Processing with Cost Tracking
 ```python
-def batch_solve_captchas(client, image_list, budget_cents=1000):
-    """Solve multiple CAPTCHAs within budget constraint"""
-    results = []
-    spent = 0
-    initial_balance = client.get_balance()
+from agents.agent_wrapper import CaptchaSolver
+
+with CaptchaSolver(username="your_username", password="your_password") as solver:
+    # Solve multiple CAPTCHAs efficiently
+    image_list = ["cap1.png", "cap2.png", "cap3.png"]
+    results = solver.solve_batch(
+        image_list,
+        timeout=60,
+        max_per_batch=10,
+        min_balance_cents=100  # Stop if balance too low
+    )
     
-    for image_path in image_list:
-        remaining_budget = budget_cents - spent
-        if remaining_budget < 100:  # Min $1 safety margin
-            break
-            
-        try:
-            captcha = client.decode(image_path, timeout=60)
-            if captcha:
-                results.append(captcha)
-                spent = initial_balance - client.get_balance()
-        except Exception as e:
-            print(f"Failed to solve {image_path}: {e}")
-            
-    return results, spent
+    for result in results:
+        if result.success:
+            print(f"ID {result.captcha_id}: {result.text} (${result.cost_cents/100:.4f})")
+        else:
+            print(f"Failed: {result.error}")
 ```
 
-### Pattern 3: Async-Compatible Wrapper
+### Pattern 3: Quick Convenience Function
 ```python
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
+from agents.agent_wrapper import solve_captcha_quick
 
-class AsyncCaptchaSolver:
-    def __init__(self, username, password, max_workers=5):
-        self.client = deathbycaptcha.SocketClient(username, password)
-        self.executor = ThreadPoolExecutor(max_workers=max_workers)
-    
-    async def decode_async(self, image_path, timeout=60):
-        """Async wrapper for decode function"""
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            self.executor, 
-            self.client.decode, 
-            image_path, 
-            timeout
-        )
+# Fastest way to solve a single CAPTCHA
+result_text = solve_captcha_quick(
+    username="your_username",
+    password="your_password",
+    captcha="captcha.png",
+    timeout=60
+)
+
+if result_text:
+    print(f"Solved: {result_text}")
+else:
+    print("Failed to solve")
 ```
 
-### Pattern 4: Conditional Solving Based on Type
+### Pattern 4: Retry Logic with Exponential Backoff
 ```python
-def solve_captcha_smart(client, image_path, captcha_type='normal', **kwargs):
-    """
-    Solve CAPTCHA with type-specific parameters.
+from agents.agent_wrapper import CaptchaSolver
+import time
+
+with CaptchaSolver(username="your_username", password="your_password") as solver:
+    # The solve() method has built-in retry support
+    result = solver.solve(
+        "captcha.png",
+        timeout=60,
+        max_retries=3  # Will retry up to 3 times with exponential backoff
+    )
     
-    captcha_type: 'normal', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha', etc.
-    """
-    decode_params = kwargs.copy()
-    
-    # Add type-specific parameters
-    if captcha_type == 'recaptcha_v2':
-        decode_params['token_params'] = {
-            'googlekey': kwargs.get('sitekey'),
-            'pageurl': kwargs.get('pageurl')
-        }
-    elif captcha_type == 'recaptcha_v3':
-        decode_params['type'] = 7
+    if not result.success:
+        print(f"Failed after retries: {result.error}")
         decode_params['token_params'] = {
             'googlekey': kwargs.get('sitekey'),
             'pageurl': kwargs.get('pageurl'),

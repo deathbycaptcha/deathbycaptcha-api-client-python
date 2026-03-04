@@ -12,29 +12,44 @@ This directory contains example implementations and patterns for integrating the
 
 ## Quick Start
 
-### 1. Simple Agent Tool
+### 1. Simple Agent Tool (Recommended)
 ```python
 from agent_wrapper import CaptchaSolver
 
-solver = CaptchaSolver(username="user", password="pass")
-result = solver.solve("captcha.png")
-print(result.text)
+# Use context manager for automatic cleanup
+with CaptchaSolver(username="user", password="pass") as solver:
+    result = solver.solve("captcha.png")
+    if result.success:
+        print(f"Solved: {result.text}")
+    else:
+        print(f"Error: {result.error}")
 ```
 
 ### 2. Batch Processing
 ```python
-results = solver.solve_batch(["cap1.png", "cap2.png", "cap3.png"])
-for r in results:
-    print(f"{r.captcha_id}: {r.text}")
+from agent_wrapper import CaptchaSolver
+
+with CaptchaSolver(username="user", password="pass") as solver:
+    results = solver.solve_batch(
+        ["cap1.png", "cap2.png", "cap3.png"],
+        timeout=60,
+        max_per_batch=10
+    )
+    for r in results:
+        if r.success:
+            print(f"{r.captcha_id}: {r.text} (${r.cost_cents/100:.4f})")
 ```
 
 ### 3. Error Handling
 ```python
-result = solver.solve("captcha.png", timeout=30)
-if result.success:
-    print(f"Solved: {result.text}")
-else:
-    print(f"Failed: {result.error}")
+from agent_wrapper import CaptchaSolver
+
+with CaptchaSolver(username="user", password="pass") as solver:
+    result = solver.solve("captcha.png", timeout=30, max_retries=3)
+    if result.success:
+        print(f"Solved: {result.text}")
+    else:
+        print(f"Failed: {result.error}")
 ```
 
 ## Integration Patterns
@@ -69,8 +84,28 @@ Copy `agent_config.example.json` to `agent_config.json` and fill in your credent
 4. **Monitor balance** - Check before batch operations
 5. **Set appropriate timeouts** - Longer for complex CAPTCHAs
 
+## Quick Reference
+
+For complete integration methods, see [../AGENT_USAGE.md](../AGENT_USAGE.md#L202) for patterns and examples.
+
+## Environment Variables
+
+Always use environment variables for credentials (recommended for security):
+```bash
+export DBC_USERNAME="your_username"
+export DBC_PASSWORD="your_password"
+```
+
+Then in code:
+```python
+import os
+username = os.getenv("DBC_USERNAME")
+password = os.getenv("DBC_PASSWORD")
+```
+
 ## See Also
 
-- Main documentation: [../AGENT_USAGE.md](../AGENT_USAGE.md)
+- Agent Integration Guide: [../AGENT_USAGE.md](../AGENT_USAGE.md)
 - API Schema: [../schema.json](../schema.json)
 - Library docs: [../README.md](../README.md)
+- Official API Metadata: https://github.com/deathbycaptcha/deathbycaptcha-agent-api-metadata

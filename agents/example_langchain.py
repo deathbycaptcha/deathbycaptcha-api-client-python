@@ -14,6 +14,7 @@ except ImportError:
     print("  pip install langchain langchain-community anthropic")
     exit(1)
 
+import os
 from agent_wrapper import CaptchaSolver
 
 
@@ -30,19 +31,20 @@ def solve_captcha(image_path: str, timeout: int = 60) -> str:
     Returns:
         The solved CAPTCHA text, or error message if failed
     """
-    solver = CaptchaSolver(
-        username="your_username",  # Set via environment variables in production
-        password="your_password"
-    )
+    # Get credentials from environment variables
+    username = os.getenv("DBC_USERNAME")
+    password = os.getenv("DBC_PASSWORD")
     
-    try:
+    if not username or not password:
+        return "Error: DBC_USERNAME and DBC_PASSWORD environment variables not set"
+    
+    # Use context manager for automatic cleanup
+    with CaptchaSolver(username=username, password=password) as solver:
         result = solver.solve(image_path, timeout=timeout)
         if result.success:
             return f"CAPTCHA solved: {result.text}"
         else:
             return f"Failed to solve CAPTCHA: {result.error}"
-    finally:
-        solver.close()
 
 
 @tool
@@ -53,16 +55,17 @@ def check_captcha_balance() -> str:
     Returns:
         Current balance in USD format
     """
-    solver = CaptchaSolver(
-        username="your_username",
-        password="your_password"
-    )
+    # Get credentials from environment variables
+    username = os.getenv("DBC_USERNAME")
+    password = os.getenv("DBC_PASSWORD")
     
-    try:
+    if not username or not password:
+        return "Error: DBC_USERNAME and DBC_PASSWORD environment variables not set"
+    
+    # Use context manager for automatic cleanup
+    with CaptchaSolver(username=username, password=password) as solver:
         balance = solver.get_balance()
         return f"Current balance: ${balance/100:.2f}"
-    finally:
-        solver.close()
 
 
 def create_captcha_agent():
@@ -98,25 +101,28 @@ def run_agent_example():
     
     # Example: Agent decides to check balance, then solve a CAPTCHA
     response = agent.run(
-        "First check my DBC balance. If I have enough balance, "
-        "solve the CAPTCHA at /tmp/captcha.png"
+        "First check my DeathByCaptcha account balance. "
+        "If I have enough credits (at least $1), solve the CAPTCHA at /tmp/test_captcha.png. "
+        "Return both the balance and the solved CAPTCHA text."
     )
     
+    print("\n=== Agent Response ===")
     print(response)
 
 
 if __name__ == "__main__":
-    print("LangChain CAPTCHA Agent Example")
+    print("DeathByCaptcha LangChain Agent Example")
     print("=" * 50)
-    print()
-    print("To use this example:")
-    print("1. Install dependencies: pip install langchain langchain-community anthropic")
-    print("2. Set environment variables:")
-    print("   - ANTHROPIC_API_KEY (your Anthropic API key)")
-    print("   - DBC_USERNAME (your DeathByCaptcha username)")
-    print("   - DBC_PASSWORD (your DeathByCaptcha password)")
-    print("3. Run: python example_langchain.py")
-    print()
-    print("The agent will have access to:")
-    print("  - solve_captcha(image_path, timeout) - Solve CAPTCHA")
-    print("  - check_captcha_balance() - Check balance")
+    print("\nMake sure to set environment variables:")
+    print("  export ANTHROPIC_API_KEY='your_api_key'")
+    print("  export DBC_USERNAME='your_username'")
+    print("  export DBC_PASSWORD='your_password'")
+    print("\nInstall dependencies with:")
+    print("  pip install langchain langchain-community anthropic")
+    print("\nRunning agent example...\n")
+    
+    try:
+        run_agent_example()
+    except ImportError as e:
+        print(f"Error: {e}")
+        print("Install dependencies with: pip install langchain langchain-community anthropic")

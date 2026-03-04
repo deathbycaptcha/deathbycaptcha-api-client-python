@@ -7,6 +7,7 @@ that an LLM agent can call.
 """
 
 import json
+import os
 from agent_wrapper import CaptchaSolver, CaptchaResult
 
 
@@ -38,9 +39,13 @@ class CaptchaToolHandler:
     """
     Handler for LLM agents calling the CAPTCHA solving tool.
     
+    Credentials are read from environment variables for security:
+    - DBC_USERNAME: DeathByCaptcha account username
+    - DBC_PASSWORD: DeathByCaptcha account password
+    
     Usage with Anthropic's SDK:
     ```python
-    handler = CaptchaToolHandler(username, password)
+    handler = CaptchaToolHandler()
     result = handler.process_tool_call("solve_captcha", {
         "captcha_path": "image.png", 
         "timeout": 60
@@ -48,9 +53,24 @@ class CaptchaToolHandler:
     ```
     """
     
-    def __init__(self, username: str, password: str):
-        """Initialize tool handler with DBC credentials"""
-        self.solver = CaptchaSolver(username, password)
+    def __init__(self, username: str = None, password: str = None):
+        """
+        Initialize tool handler with DBC credentials.
+        
+        Args:
+            username: DBC username (if None, reads from DBC_USERNAME env var)
+            password: DBC password (if None, reads from DBC_PASSWORD env var)
+        """
+        self.username = username or os.getenv("DBC_USERNAME")
+        self.password = password or os.getenv("DBC_PASSWORD")
+        
+        if not self.username or not self.password:
+            raise ValueError(
+                "Missing DBC credentials. Set DBC_USERNAME and DBC_PASSWORD "
+                "environment variables or pass username/password to __init__"
+            )
+        
+        self.solver = CaptchaSolver(self.username, self.password)
     
     def process_tool_call(
         self,
@@ -234,11 +254,12 @@ class LangChainToolExample:
 def simple_agent_workflow():
     """
     Example of a simple agent solving CAPTCHAs in a loop.
+    
+    Requires environment variables:
+    - DBC_USERNAME: DeathByCaptcha username
+    - DBC_PASSWORD: DeathByCaptcha password
     """
-    tool_handler = CaptchaToolHandler(
-        username="your_username",
-        password="your_password"
-    )
+    tool_handler = CaptchaToolHandler()  # Credentials from env vars
     
     # Simulate agent making multiple CAPTCHA solve requests
     captcha_paths = [
@@ -258,7 +279,7 @@ def simple_agent_workflow():
         else:
             print(f"✗ Failed: {result['error']}")
     
-    tool_handler.close()
+    tool_handler.solver.close()
 
 
 if __name__ == "__main__":
@@ -268,4 +289,20 @@ if __name__ == "__main__":
     print("Tool Definition:")
     print(json.dumps(CAPTCHA_TOOL_DEFINITION, indent=2))
     print()
-    print("See docstrings for usage with Claude, GPT, LangChain, etc.")
+    print("Setup Instructions:")
+    print("1. Set environment variables:")
+    print("   export DBC_USERNAME='your_username'")
+    print("   export DBC_PASSWORD='your_password'")
+    print()
+    print("2. See docstrings and examples for usage with:")
+    print("   - Anthropic Claude (example below)")
+    print("   - OpenAI GPT models")
+    print("   - LangChain")
+    print()
+    print("Example: Simple sync workflow")
+    print("-" * 50)
+    try:
+        simple_agent_workflow()
+    except ValueError as e:
+        print(f"Error: {e}")
+        print("Please set DBC_USERNAME and DBC_PASSWORD environment variables")

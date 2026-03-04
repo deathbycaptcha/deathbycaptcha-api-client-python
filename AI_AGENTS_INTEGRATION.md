@@ -59,9 +59,13 @@ This repository has been enhanced with comprehensive support for AI agents to in
 ```python
 from agents.agent_wrapper import CaptchaSolver
 
-solver = CaptchaSolver("username", "password")
-result = solver.solve("captcha.png")
-print(result.text)
+# Using context manager for automatic resource cleanup
+with CaptchaSolver("username", "password") as solver:
+    result = solver.solve("captcha.png")
+    if result.success:
+        print(result.text)
+    else:
+        print(f"Error: {result.error}")
 ```
 
 ### Path 2: LLM Tool Integration (Claude/GPT)
@@ -75,11 +79,18 @@ tool_def = handler.get_tool_definition()
 
 ### Path 3: LangChain Integration
 ```python
+# Set environment variables first
+import os
+os.environ['DBC_USERNAME'] = 'your_username'
+os.environ['DBC_PASSWORD'] = 'your_password'
+
 # Import and use tools from agents/example_langchain.py
 from agents.example_langchain import create_captcha_agent
 
 agent = create_captcha_agent()
-response = agent.run("Solve the CAPTCHA at /path/to/image.png")
+response = agent.run(
+    "Check my balance and solve the CAPTCHA at /path/to/image.png"
+)
 ```
 
 ### Path 4: HTTP API (Distributed/Serverless)
