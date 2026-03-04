@@ -242,7 +242,7 @@ This is normal behavior when **Mask variable** is enabled. This is secure - valu
 - [`.env`](.env) - Local credentials (in `.gitignore`, not committed)
 - [`.github/workflows/tests.yml`](.github/workflows/tests.yml) - GitHub Actions config
 - [`.gitlab-ci.yml`](.gitlab-ci.yml) - GitLab CI config
-- [`.github/README.md`](.github/README.md) - GitHub Actions documentation
+- [`.github/ACTIONS.md`](.github/ACTIONS.md) - GitHub Actions documentation
 - [`.gitlab/README.md`](.gitlab/README.md) - GitLab CI documentation
 - [`tests/README.md`](tests/README.md) - Testing documentation
 

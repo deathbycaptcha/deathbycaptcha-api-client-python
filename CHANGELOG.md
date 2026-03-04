@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 - Local helper script `run-gitlab-ci-local.sh` for running GitLab CI jobs with credentials from `.env`
 - Agent and CI documentation for credentials setup:
 	- `CREDENTIALS.md`
-	- `.github/README.md`
+	- `.github/ACTIONS.md`
 	- `.gitlab/README.md`
 	- `.github/COVERAGE-GUIDE.md`
 - Python 3.14 specialized image CAPTCHA integration test (`type=0`) with polling flow validation
