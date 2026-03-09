@@ -40,7 +40,9 @@ class TestImports(unittest.TestCase):
         """Test that API_VERSION is correctly defined."""
         from deathbycaptcha import API_VERSION
         self.assertIsNotNone(API_VERSION)
-        self.assertIn("4.7.0", API_VERSION)
+        # Verify version format (e.g., "DBC/Python v4.7.1")
+        self.assertIn("DBC/Python", API_VERSION)
+        self.assertTrue(API_VERSION.startswith("DBC/Python v"))
 
     def test_python_version_compatibility(self):
         """Test that module works with required Python versions."""

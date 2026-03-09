@@ -21,7 +21,14 @@ class TestConstants(unittest.TestCase):
         """Test API_VERSION is correctly formatted."""
         self.assertIsInstance(API_VERSION, str)
         self.assertIn("DBC/Python", API_VERSION)
-        self.assertIn("4.7.0", API_VERSION)
+        # Verify version format (e.g., "DBC/Python v4.7.1")
+        self.assertTrue(API_VERSION.startswith("DBC/Python v"))
+        # Extract version number and verify it has the expected format
+        version_part = API_VERSION.split("v")[-1]
+        version_components = version_part.split(".")
+        self.assertEqual(len(version_components), 3)  # Major.Minor.Patch
+        for component in version_components:
+            self.assertTrue(component.isdigit())
 
     def test_timeouts_are_positive(self):
         """Test timeout constants are positive integers."""
