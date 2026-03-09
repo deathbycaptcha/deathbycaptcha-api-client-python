@@ -5,20 +5,8 @@ on:
     branches: [ main, master, develop ]
     tags:
       - '*'
-    paths:
-      - '.github/workflows/selenium-sample.yml'
-      - 'examples/deathbycaptcha-python-selenium/**'
-      - 'src/deathbycaptcha/**'
-      - 'pyproject.toml'
-      - 'requirements.txt'
   pull_request:
     branches: [ main, master, develop ]
-    paths:
-      - '.github/workflows/selenium-sample.yml'
-      - 'examples/deathbycaptcha-python-selenium/**'
-      - 'src/deathbycaptcha/**'
-      - 'pyproject.toml'
-      - 'requirements.txt'
   workflow_dispatch:
 
 jobs:
@@ -68,7 +56,7 @@ jobs:
         python -c "import selenium; import deathbycaptcha; from dotenv import load_dotenv; print('All imports successful')"
 
     - name: Run Selenium sample (live, optional)
-      if: ${{ secrets.DBC_USERNAME && secrets.DBC_PASSWORD }}
+      if: ${{ env.DBC_USERNAME != '' && env.DBC_PASSWORD != '' }}
       env:
         DBC_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_PASSWORD: ${{ secrets.DBC_PASSWORD }}
@@ -83,7 +71,7 @@ jobs:
         timeout 120 python examples/deathbycaptcha-python-selenium/python_selenium_example.py || echo "Script finished with exit code $?"
 
     - name: Skip live run (secrets not configured)
-      if: ${{ !secrets.DBC_USERNAME || !secrets.DBC_PASSWORD }}
+      if: ${{ env.DBC_USERNAME == '' || env.DBC_PASSWORD == '' }}
       run: |
         echo "DBC_USERNAME/DBC_PASSWORD secrets are not configured."
         echo "Validation steps completed; live Selenium execution skipped."
