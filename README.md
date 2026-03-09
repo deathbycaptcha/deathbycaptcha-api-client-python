@@ -208,7 +208,7 @@ cd examples/deathbycaptcha-python-selenium
 python python_selenium_example.py
 ```
 
-See detailed usage in `examples/deathbycaptcha-python-selenium/README.md`.
+See detailed usage in [examples/deathbycaptcha-python-selenium/README.md](examples/deathbycaptcha-python-selenium/README.md).
 
 ### Running an Example
 
