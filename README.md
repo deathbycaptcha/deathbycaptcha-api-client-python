@@ -1,11 +1,29 @@
 # [DeathByCaptcha](https://deathbycaptcha.com/)
 
 [![Tests](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
+[![Selenium Sample](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml)
+[![Publish to PyPI](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml)
 [![Coverage](https://raw.githubusercontent.com/deathbycaptcha/deathbycaptcha-api-client-python/master/.github/badges/coverage.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
 
 ## Introduction
 DeathByCaptcha offers APIs of two types — HTTP and socket-based, with the latter being recommended for having faster responses and overall better performance. Switching between different APIs is usually as easy as changing the client class and/or package name, the interface stays the same.
 When using the socket API, please make sure that outgoing TCP traffic to *api.dbcapi.me* to the ports range *8123–8130* is not blocked on your side.
+
+## Index
+
+- [Supported CAPTCHA Types](#supported-captcha-types)
+- [Installation](#installation)
+- [How to Use DBC API Clients](#how-to-use-dbc-api-clients)
+- [Credentials & Configuration](#credentials--configuration)
+- [Running the Examples](#running-the-examples)
+- [Featured Sample: Selenium reCAPTCHA v2](#-featured-sample-selenium-recaptcha-v2)
+- [New Recaptcha API support](#new-recaptcha-api-support)
+- [Coordinates API FAQ](#coordinates-api-faq)
+- [Image Group API FAQ](#image-group-api-faq)
+- [New Recaptcha by Token API support (reCAPTCHA v2 and reCAPTCHA v3)](#new-recaptcha-by-token-api-support-recaptcha-v2-and-recaptcha-v3)
+- [reCAPTCHA v2 API FAQ](#recaptcha-v2-api-faq)
+- [What's "new reCAPTCHA v3"?](#whats-new-recaptcha-v3)
+- [reCAPTCHA v3 API FAQ](#recaptcha-v3-api-faq)
 
 ## Supported CAPTCHA Types
 
@@ -167,7 +185,30 @@ cd examples
 - `example.reCAPTCHA_Image_Group.py` - Solve reCAPTCHA Image Group
 - `example.Turnstile.py` - Solve Cloudflare Turnstile
 - `example.Friendly.py` - Solve Friendly Captcha
+- `deathbycaptcha-python-selenium/` - Selenium sample for reCAPTCHA v2 token flow
 - And many more for other CAPTCHA types...
+
+### ⭐ Featured Sample: Selenium reCAPTCHA v2
+
+This repository includes an integrated Selenium sample at:
+
+- `examples/deathbycaptcha-python-selenium/`
+
+Use this sample when you need a browser-automation flow that extracts `sitekey`, requests a token using DeathByCaptcha (`type=4`), injects it into the page, and submits the form.
+
+Quick run:
+
+```bash
+pip install -e .
+pip install -r examples/deathbycaptcha-python-selenium/requirements.txt
+cp examples/deathbycaptcha-python-selenium/.env.example examples/deathbycaptcha-python-selenium/.env
+
+# edit .env with DBC_USERNAME and DBC_PASSWORD
+cd examples/deathbycaptcha-python-selenium
+python python_selenium_example.py
+```
+
+See detailed usage in `examples/deathbycaptcha-python-selenium/README.md`.
 
 ### Running an Example
 

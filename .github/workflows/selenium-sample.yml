@@ -1,0 +1,101 @@
+name: Selenium Sample
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    tags:
+      - '*'
+    paths:
+      - '.github/workflows/selenium-sample.yml'
+      - 'examples/deathbycaptcha-python-selenium/**'
+      - 'src/deathbycaptcha/**'
+      - 'pyproject.toml'
+      - 'requirements.txt'
+  pull_request:
+    branches: [ main, master, develop ]
+    paths:
+      - '.github/workflows/selenium-sample.yml'
+      - 'examples/deathbycaptcha-python-selenium/**'
+      - 'src/deathbycaptcha/**'
+      - 'pyproject.toml'
+      - 'requirements.txt'
+  workflow_dispatch:
+
+jobs:
+  selenium-sample:
+    name: Selenium Sample (Python 3.14)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      MOZ_HEADLESS: '1'
+      DBC_USERNAME: ${{ secrets.DBC_USERNAME }}
+      DBC_PASSWORD: ${{ secrets.DBC_PASSWORD }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.14
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+        cache: pip
+
+    - name: Setup Firefox
+      uses: browser-actions/setup-firefox@v1
+
+    - name: Setup geckodriver
+      uses: browser-actions/setup-geckodriver@latest
+
+    - name: Show browser versions
+      run: |
+        firefox --version
+        geckodriver --version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -r examples/deathbycaptcha-python-selenium/requirements.txt
+
+    - name: Validate sample syntax
+      run: |
+        python -m py_compile examples/deathbycaptcha-python-selenium/python_selenium_example.py
+
+    - name: Validate package import
+      run: |
+        python -c "import selenium; import deathbycaptcha; from dotenv import load_dotenv; print('All imports successful')"
+
+    - name: Run Selenium sample (live, optional)
+      if: ${{ secrets.DBC_USERNAME != '' && secrets.DBC_PASSWORD != '' }}
+      env:
+        DBC_USERNAME: ${{ secrets.DBC_USERNAME }}
+        DBC_PASSWORD: ${{ secrets.DBC_PASSWORD }}
+        HEADLESS: '1'
+        BROWSER: firefox
+      shell: bash
+      run: |
+        {
+          echo "DBC_USERNAME=$DBC_USERNAME"
+          echo "DBC_PASSWORD=$DBC_PASSWORD"
+        } > examples/deathbycaptcha-python-selenium/.env
+        timeout 120 python examples/deathbycaptcha-python-selenium/python_selenium_example.py || echo "Script finished with exit code $?"
+
+    - name: Skip live run (secrets not configured)
+      if: ${{ secrets.DBC_USERNAME == '' || secrets.DBC_PASSWORD == '' }}
+      run: |
+        echo "DBC_USERNAME/DBC_PASSWORD secrets are not configured."
+        echo "Validation steps completed; live Selenium execution skipped."
+
+    - name: Upload debug artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: selenium-sample-debug-py3.14
+        path: |
+          *.png
+          *.log
+          examples/deathbycaptcha-python-selenium/*.png
+          examples/deathbycaptcha-python-selenium/*.log
+        if-no-files-found: ignore

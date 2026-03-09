@@ -88,7 +88,7 @@ except ImportError:
 
 
 # API version and unique software ID
-API_VERSION = 'DBC/Python v4.7.0'
+API_VERSION = 'DBC/Python v4.7.1'
 
 # Default CAPTCHA timeout and decode() polling interval
 DEFAULT_TIMEOUT = 60

@@ -109,6 +109,25 @@ Already configured in `.github/workflows/tests.yml`
 - Workflow passes them as `DBC_TEST_USERNAME` and `DBC_TEST_PASSWORD`
 - Tests read from environment variables
 
+### PyPI Publishing (Optional)
+
+For automatic package publishing on releases:
+
+1. Go to [PyPI Account Settings](https://pypi.org/manage/account/)
+2. Scroll to **API tokens** section
+3. Click **Add API token**
+   - Token name: `github-actions-deathbycaptcha` (or any descriptive name)
+   - Scope: **Project: deathbycaptcha-official**
+4. Copy the generated token (starts with `pypi-`)
+5. Go to GitHub repository → **Settings** → **Secrets and variables** → **Actions**
+6. Add secret:
+   - Name: `PYPI_API_TOKEN`
+   - Value: `pypi-...` (your token)
+
+**Workflow**: `.github/workflows/publish.yml` runs automatically when you create a GitHub release.
+
+**Note**: The workflow verifies that the release tag matches the version in `pyproject.toml`.
+
 ## GitLab CI Setup
 
 ### Prerequisites
