@@ -68,7 +68,7 @@ jobs:
         python -c "import selenium; import deathbycaptcha; from dotenv import load_dotenv; print('All imports successful')"
 
     - name: Run Selenium sample (live, optional)
-      if: secrets.DBC_USERNAME != '' && secrets.DBC_PASSWORD != ''
+      if: ${{ secrets.DBC_USERNAME && secrets.DBC_PASSWORD }}
       env:
         DBC_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_PASSWORD: ${{ secrets.DBC_PASSWORD }}
@@ -83,7 +83,7 @@ jobs:
         timeout 120 python examples/deathbycaptcha-python-selenium/python_selenium_example.py || echo "Script finished with exit code $?"
 
     - name: Skip live run (secrets not configured)
-      if: secrets.DBC_USERNAME == '' || secrets.DBC_PASSWORD == ''
+      if: ${{ !secrets.DBC_USERNAME || !secrets.DBC_PASSWORD }}
       run: |
         echo "DBC_USERNAME/DBC_PASSWORD secrets are not configured."
         echo "Validation steps completed; live Selenium execution skipped."
