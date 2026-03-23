@@ -371,4 +371,8 @@ Full example of **`token_params`**:
 ```
 **What's the response from reCAPTCHA v3 API?**  
 The response has the same structure as regular captcha. Refer to [Polling for uploaded CAPTCHA status](https://deathbycaptcha.com/api#polling-captcha) for details about the response. The solution will come in the **text** key of the response. It's valid for one use and has a 1 minute lifespan.
+
+## Responsible Use
+
+See [Responsible Use Agreement](RESPONSIBLE_USE.md).
     
