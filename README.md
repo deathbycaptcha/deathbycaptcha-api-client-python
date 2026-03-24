@@ -272,6 +272,7 @@ Minimal usage snippet for each supported type. Use these as a starting point and
 <a id="sample-type-0-standard-image"></a>
 #### 🖼️ Sample Type 0: Standard Image
 Official description: [Supported CAPTCHAs](https://deathbycaptcha.com/api#supported_captchas)
+Full sample: [example.Normal_Captcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Normal_Captcha.py)
 
 ```python
 captcha = client.decode("images/normal.jpg", timeout=120)
@@ -280,6 +281,7 @@ captcha = client.decode("images/normal.jpg", timeout=120)
 <a id="sample-type-4-recaptcha-v2-token"></a>
 #### 🤖 Sample Type 4: reCAPTCHA v2 Token
 Official description: [reCAPTCHA Token API (v2)](https://deathbycaptcha.com/api/newtokenrecaptcha#token-v2)
+Full sample: [example.reCAPTCHA_v2.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2.py)
 
 ```python
 import json
@@ -298,6 +300,7 @@ captcha = client.decode(type=4, token_params=token_params)
 <a id="sample-type-5-recaptcha-v3-token"></a>
 #### 🤖 Sample Type 5: reCAPTCHA v3 Token
 Official description: [reCAPTCHA v3](https://deathbycaptcha.com/api/newtokenrecaptcha#reCAPTCHAv3)
+Full sample: [example.reCAPTCHA_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v3.py)
 
 ```python
 import json
@@ -318,6 +321,7 @@ captcha = client.decode(type=5, token_params=token_params)
 <a id="sample-type-25-recaptcha-v2-enterprise"></a>
 #### 🏢 Sample Type 25: reCAPTCHA v2 Enterprise
 Official description: [reCAPTCHA v2 Enterprise](https://deathbycaptcha.com/api/newtokenrecaptcha#reCAPTCHAv2Enterprise)
+Full sample: [example.reCAPTCHA_v2_enterprise.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2_enterprise.py)
 
 ```python
 import json
@@ -336,6 +340,7 @@ captcha = client.decode(type=25, token_enterprise_params=token_enterprise_params
 <a id="sample-type-8-geetest-v3"></a>
 #### 🧩 Sample Type 8: GeeTest v3
 Official description: [GeeTest](https://deathbycaptcha.com/api/geetest)
+Full sample: [example.Geetest_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v3.py)
 
 ```python
 import json
@@ -355,6 +360,7 @@ captcha = client.decode(type=8, geetest_params=geetest_params)
 <a id="sample-type-9-geetest-v4"></a>
 #### 🧩 Sample Type 9: GeeTest v4
 Official description: [GeeTest](https://deathbycaptcha.com/api/geetest)
+Full sample: [example.Geetest_v4.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v4.py)
 
 ```python
 import json
@@ -373,6 +379,7 @@ captcha = client.decode(type=9, geetest_params=geetest_params)
 <a id="sample-type-11-text-captcha"></a>
 #### 💬 Sample Type 11: Text CAPTCHA
 Official description: [Text CAPTCHA](https://deathbycaptcha.com/api/textcaptcha)
+Full sample: [example.Textcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Textcaptcha.py)
 
 ```python
 captcha = client.decode(type=11, textcaptcha="What is two plus two?")
@@ -381,6 +388,7 @@ captcha = client.decode(type=11, textcaptcha="What is two plus two?")
 <a id="sample-type-12-cloudflare-turnstile"></a>
 #### ☁️ Sample Type 12: Cloudflare Turnstile
 Official description: [Cloudflare Turnstile](https://deathbycaptcha.com/api/turnstile)
+Full sample: [example.Turnstile.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Turnstile.py)
 
 ```python
 import json
@@ -399,6 +407,7 @@ captcha = client.decode(type=12, turnstile_params=turnstile_params)
 <a id="sample-type-13-audio-captcha"></a>
 #### 🔊 Sample Type 13: Audio CAPTCHA
 Official description: [Audio CAPTCHA](https://deathbycaptcha.com/api/audio)
+Full sample: [example.Audio.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Audio.py)
 
 ```python
 import base64
@@ -411,6 +420,7 @@ captcha = client.decode(type=13, audio=audio_b64, language="en")
 <a id="sample-type-14-lemin"></a>
 #### 🔵 Sample Type 14: Lemin
 Official description: [Lemin](https://deathbycaptcha.com/api/lemin)
+Full sample: [example.Lemin.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Lemin.py)
 
 ```python
 import json
@@ -429,6 +439,7 @@ captcha = client.decode(type=14, lemin_params=lemin_params)
 <a id="sample-type-15-capy"></a>
 #### 🏴 Sample Type 15: Capy
 Official description: [Capy](https://deathbycaptcha.com/api/capy)
+Full sample: [example.Capy.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Capy.py)
 
 ```python
 import json
@@ -448,6 +459,7 @@ captcha = client.decode(type=15, capy_params=capy_params)
 <a id="sample-type-16-amazon-waf"></a>
 #### 🛡️ Sample Type 16: Amazon WAF
 Official description: [Amazon WAF](https://deathbycaptcha.com/api/amazonwaf)
+Full sample: [example.AmazonWaf.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.AmazonWaf.py)
 
 ```python
 import json
@@ -468,6 +480,7 @@ captcha = client.decode(type=16, waf_params=waf_params)
 <a id="sample-type-17-siara"></a>
 #### 🔍 Sample Type 17: Siara
 Official description: [Siara](https://deathbycaptcha.com/api/siara)
+Full sample: [example.Siara.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Siara.py)
 
 ```python
 import json
@@ -487,6 +500,7 @@ captcha = client.decode(type=17, siara_params=siara_params)
 <a id="sample-type-18-mtcaptcha"></a>
 #### 🔒 Sample Type 18: MTCaptcha
 Official description: [MTCaptcha](https://deathbycaptcha.com/api/mtcaptcha)
+Full sample: [example.Mtcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Mtcaptcha.py)
 
 ```python
 import json
@@ -505,6 +519,7 @@ captcha = client.decode(type=18, mtcaptcha_params=mtcaptcha_params)
 <a id="sample-type-19-cutcaptcha"></a>
 #### ✂️ Sample Type 19: Cutcaptcha
 Official description: [Cutcaptcha](https://deathbycaptcha.com/api/cutcaptcha)
+Full sample: [example.Cutcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Cutcaptcha.py)
 
 ```python
 import json
@@ -524,6 +539,7 @@ captcha = client.decode(type=19, cutcaptcha_params=cutcaptcha_params)
 <a id="sample-type-20-friendly-captcha"></a>
 #### 💚 Sample Type 20: Friendly Captcha
 Official description: [Friendly Captcha](https://deathbycaptcha.com/api/friendly)
+Full sample: [example.Friendly.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Friendly.py)
 
 ```python
 import json
@@ -542,6 +558,7 @@ captcha = client.decode(type=20, friendly_params=friendly_params)
 <a id="sample-type-21-datadome"></a>
 #### 🛡️ Sample Type 21: DataDome
 Official description: [DataDome](https://deathbycaptcha.com/api/datadome)
+Full sample: [example.Datadome.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Datadome.py)
 
 ```python
 import json
@@ -560,6 +577,7 @@ captcha = client.decode(type=21, datadome_params=datadome_params)
 <a id="sample-type-23-tencent"></a>
 #### 🇨🇳 Sample Type 23: Tencent
 Official description: [Tencent](https://deathbycaptcha.com/api/tencent)
+Full sample: [example.Tencent.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Tencent.py)
 
 ```python
 import json
@@ -578,6 +596,7 @@ captcha = client.decode(type=23, tencent_params=tencent_params)
 <a id="sample-type-24-atb"></a>
 #### 🏷️ Sample Type 24: ATB
 Official description: [ATB](https://deathbycaptcha.com/api/atb)
+Full sample: [example.Atb.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Atb.py)
 
 ```python
 import json
