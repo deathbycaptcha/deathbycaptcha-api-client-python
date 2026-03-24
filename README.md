@@ -1,15 +1,5 @@
 # [DeathByCaptcha](https://deathbycaptcha.com/)
 
-<p align="center">
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-python"><img alt=":snake: Python" src="https://img.shields.io/badge/%3Asnake%3A%20Python-3776AB?style=for-the-badge"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-nodejs"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-dotnet"><img alt=".NET" src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-java"><img alt="Java" src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-php"><img alt="PHP" src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-perl"><img alt="Perl" src="https://img.shields.io/badge/Perl-39457E?style=for-the-badge&logo=perl&logoColor=white"></a>
-  <a href="https://github.com/deathbycaptcha/deathbycaptcha-api-client-c11"><img alt="C" src="https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=c&logoColor=black"></a>
-  <a href="https://github.com/deathbycaptcha/dbc_api_autoit"><img alt="AutoIt" src="https://img.shields.io/badge/AutoIt-1C3552?style=for-the-badge"></a>
-</p>
 [![Tests](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
 [![Selenium Sample](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml)
 [![Publish to PyPI](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml)
