@@ -54,6 +54,7 @@ See the sections below for installation, credentials, and per-type code snippets
     - [Featured Sample: Selenium reCAPTCHA v2](#-featured-sample-selenium-recaptcha-v2)
 
 
+<a id="installation"></a>
 ## 🛠️ Installation
 
 <a id="from-pypi-recommended"></a>
@@ -594,6 +595,7 @@ See detailed usage in [examples/deathbycaptcha-python-selenium/README.md](exampl
 The Token-based API solves reCAPTCHA challenges by returning a token you inject directly into the page form, rather than clicking images. Given a site URL and site key, DBC solves the challenge on its side and returns a token valid for one submission.
 
 - **Token Image API**: Provided a site URL and site key, the API returns a token that you use to submit the form on the page with the reCAPTCHA challenge.
+<a id="recaptcha-v2-api-faq"></a>
 ### ❓ reCAPTCHA v2 API FAQ
 
 **What's the Token Image API URL?**
@@ -646,6 +648,7 @@ The token image API response has the same structure as regular captchas' respons
 This API extends the reCAPTCHA v2 Token API with two additional parameters: `action` and **minimal score (`min_score`)**.
 reCAPTCHA v3 returns a score from each user, that evaluate if user is a bot or human. Then the website uses the score value that could range from 0 to 1 to decide if will accept or not the requests. Lower scores near to 0 are identified as bot.
 The `action` parameter at reCAPTCHA v3 is an additional data used to separate different captcha validations like for example **login**, **register**, **sales**, **etc**.
+<a id="recaptcha-v3-api-faq"></a>
 ### ❓ reCAPTCHA v3 API FAQ
 
 **What is `action` in reCAPTCHA v3?**
