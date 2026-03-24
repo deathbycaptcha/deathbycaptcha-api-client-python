@@ -47,7 +47,7 @@ try:
     captcha = client.decode(type=5, token_params=json_Captcha)
     if captcha:
         # The CAPTCHA was solved; captcha["captcha"] item holds its
-        # numeric ID, and captcha["text"] item it's a list of "coordinates".
+        # numeric ID, and captcha["text"] contains the token string (valid for one use).
         print("CAPTCHA %s solved: %s" % (captcha["captcha"], captcha["text"]))
 
         if '':  # check if the CAPTCHA was incorrectly solved
