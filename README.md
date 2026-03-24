@@ -220,31 +220,31 @@ password = "your_password"
 <a id="sample-index-by-captcha-type"></a>
 ### 📋 Type Reference
 
-The table below maps every supported type to its family, API parameters, use case, a code snippet, and the corresponding example file in `examples/`.
+The table below maps every supported type to its use case, a code snippet, and the corresponding example file in `examples/`.
 
-| Type ID | CAPTCHA Type | Family | Parameters | Use Case | Embedded Official Sample | Python Sample |
-| --- | --- | --- | --- | --- | --- | --- |
-| 0 | Standard Image | Image upload | `captchafile` or `captcha` (base64) | Basic image CAPTCHA | [View snippet](#sample-type-0-standard-image) | [example.Normal_Captcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Normal_Captcha.py) |
-| 2 | ~~reCAPTCHA Coordinates~~ *(deprecated)* | Image interaction | — | Deprecated — do not use for new integrations | — | — |
-| 3 | ~~reCAPTCHA Image Group~~ *(deprecated)* | Image interaction | — | Deprecated — do not use for new integrations | — | — |
-| 4 | reCAPTCHA v2 Token | Token-based | `token_params` | reCAPTCHA v2 token solving | [View snippet](#sample-type-4-recaptcha-v2-token) | [example.reCAPTCHA_v2.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2.py) |
-| 5 | reCAPTCHA v3 Token | Token-based | `token_params` + `action`, `min_score` | reCAPTCHA v3 with risk scoring | [View snippet](#sample-type-5-recaptcha-v3-token) | [example.reCAPTCHA_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v3.py) |
-| 25 | reCAPTCHA v2 Enterprise | Token-based | `token_enterprise_params` | reCAPTCHA v2 Enterprise tokens | [View snippet](#sample-type-25-recaptcha-v2-enterprise) | [example.reCAPTCHA_v2_enterprise.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2_enterprise.py) |
-| 8 | GeeTest v3 | Vendor challenge | `geetest_params` | Geetest v3 verification | [View snippet](#sample-type-8-geetest-v3) | [example.Geetest_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v3.py) |
-| 9 | GeeTest v4 | Vendor challenge | `geetest_params` | Geetest v4 verification | [View snippet](#sample-type-9-geetest-v4) | [example.Geetest_v4.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v4.py) |
-| 11 | Text CAPTCHA | Question/answer | `textcaptcha` | Text-based question solving | [View snippet](#sample-type-11-text-captcha) | [example.Textcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Textcaptcha.py) |
-| 12 | Cloudflare Turnstile | Token-based | `turnstile_params` | Cloudflare Turnstile token | [View snippet](#sample-type-12-cloudflare-turnstile) | [example.Turnstile.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Turnstile.py) |
-| 13 | Audio CAPTCHA | Audio | `audio` (base64), `language` | Audio CAPTCHA solving | [View snippet](#sample-type-13-audio-captcha) | [example.Audio.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Audio.py) |
-| 14 | Lemin | Vendor challenge | `lemin_params` | Lemin CAPTCHA | [View snippet](#sample-type-14-lemin) | [example.Lemin.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Lemin.py) |
-| 15 | Capy | Vendor challenge | `capy_params` | Capy CAPTCHA | [View snippet](#sample-type-15-capy) | [example.Capy.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Capy.py) |
-| 16 | Amazon WAF | Vendor challenge | `waf_params` | Amazon WAF verification | [View snippet](#sample-type-16-amazon-waf) | [example.AmazonWaf.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.AmazonWaf.py) |
-| 17 | Siara | Vendor challenge | `siara_params` | Siara CAPTCHA | [View snippet](#sample-type-17-siara) | [example.Siara.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Siara.py) |
-| 18 | MTCaptcha | Vendor challenge | `mtcaptcha_params` | Mtcaptcha CAPTCHA | [View snippet](#sample-type-18-mtcaptcha) | [example.Mtcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Mtcaptcha.py) |
-| 19 | Cutcaptcha | Vendor challenge | `cutcaptcha_params` | Cutcaptcha CAPTCHA | [View snippet](#sample-type-19-cutcaptcha) | [example.Cutcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Cutcaptcha.py) |
-| 20 | Friendly Captcha | Vendor challenge | `friendly_params` | Friendly Captcha | [View snippet](#sample-type-20-friendly-captcha) | [example.Friendly.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Friendly.py) |
-| 21 | DataDome | Vendor challenge | `datadome_params` | Datadome verification | [View snippet](#sample-type-21-datadome) | [example.Datadome.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Datadome.py) |
-| 23 | Tencent | Vendor challenge | `tencent_params` | Tencent CAPTCHA | [View snippet](#sample-type-23-tencent) | [example.Tencent.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Tencent.py) |
-| 24 | ATB | Vendor challenge | `atb_params` | ATB CAPTCHA | [View snippet](#sample-type-24-atb) | [example.Atb.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Atb.py) |
+| Type ID | CAPTCHA Type | Use Case | Embedded Official Sample | Python Sample |
+| --- | --- | --- | --- | --- |
+| 0 | Standard Image | Basic image CAPTCHA | [View snippet](#sample-type-0-standard-image) | [example.Normal_Captcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Normal_Captcha.py) |
+| 2 | ~~reCAPTCHA Coordinates~~ *(deprecated)* | Deprecated — do not use for new integrations | — | — |
+| 3 | ~~reCAPTCHA Image Group~~ *(deprecated)* | Deprecated — do not use for new integrations | — | — |
+| 4 | reCAPTCHA v2 Token | reCAPTCHA v2 token solving | [View snippet](#sample-type-4-recaptcha-v2-token) | [example.reCAPTCHA_v2.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2.py) |
+| 5 | reCAPTCHA v3 Token | reCAPTCHA v3 with risk scoring | [View snippet](#sample-type-5-recaptcha-v3-token) | [example.reCAPTCHA_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v3.py) |
+| 25 | reCAPTCHA v2 Enterprise | reCAPTCHA v2 Enterprise tokens | [View snippet](#sample-type-25-recaptcha-v2-enterprise) | [example.reCAPTCHA_v2_enterprise.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.reCAPTCHA_v2_enterprise.py) |
+| 8 | GeeTest v3 | Geetest v3 verification | [View snippet](#sample-type-8-geetest-v3) | [example.Geetest_v3.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v3.py) |
+| 9 | GeeTest v4 | Geetest v4 verification | [View snippet](#sample-type-9-geetest-v4) | [example.Geetest_v4.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Geetest_v4.py) |
+| 11 | Text CAPTCHA | Text-based question solving | [View snippet](#sample-type-11-text-captcha) | [example.Textcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Textcaptcha.py) |
+| 12 | Cloudflare Turnstile | Cloudflare Turnstile token | [View snippet](#sample-type-12-cloudflare-turnstile) | [example.Turnstile.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Turnstile.py) |
+| 13 | Audio CAPTCHA | Audio CAPTCHA solving | [View snippet](#sample-type-13-audio-captcha) | [example.Audio.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Audio.py) |
+| 14 | Lemin | Lemin CAPTCHA | [View snippet](#sample-type-14-lemin) | [example.Lemin.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Lemin.py) |
+| 15 | Capy | Capy CAPTCHA | [View snippet](#sample-type-15-capy) | [example.Capy.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Capy.py) |
+| 16 | Amazon WAF | Amazon WAF verification | [View snippet](#sample-type-16-amazon-waf) | [example.AmazonWaf.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.AmazonWaf.py) |
+| 17 | Siara | Siara CAPTCHA | [View snippet](#sample-type-17-siara) | [example.Siara.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Siara.py) |
+| 18 | MTCaptcha | Mtcaptcha CAPTCHA | [View snippet](#sample-type-18-mtcaptcha) | [example.Mtcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Mtcaptcha.py) |
+| 19 | Cutcaptcha | Cutcaptcha CAPTCHA | [View snippet](#sample-type-19-cutcaptcha) | [example.Cutcaptcha.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Cutcaptcha.py) |
+| 20 | Friendly Captcha | Friendly Captcha | [View snippet](#sample-type-20-friendly-captcha) | [example.Friendly.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Friendly.py) |
+| 21 | DataDome | Datadome verification | [View snippet](#sample-type-21-datadome) | [example.Datadome.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Datadome.py) |
+| 23 | Tencent | Tencent CAPTCHA | [View snippet](#sample-type-23-tencent) | [example.Tencent.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Tencent.py) |
+| 24 | ATB | ATB CAPTCHA | [View snippet](#sample-type-24-atb) | [example.Atb.py](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/blob/master/examples/example.Atb.py) |
 
 <a id="quick-type-snippets"></a>
 ### 📝 Per-Type Code Snippets
