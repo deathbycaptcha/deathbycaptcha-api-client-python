@@ -40,8 +40,6 @@ if captcha:
 ### Tests Status
 
 [![Tests](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
-[![Selenium Sample](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/selenium-sample.yml)
-[![Publish to PyPI](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml/badge.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/publish.yml)
 [![Coverage](https://raw.githubusercontent.com/deathbycaptcha/deathbycaptcha-api-client-python/master/.github/badges/coverage.svg)](https://github.com/deathbycaptcha/deathbycaptcha-api-client-python/actions/workflows/tests.yml)
 
 ---
