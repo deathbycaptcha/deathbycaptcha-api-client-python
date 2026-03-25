@@ -23,7 +23,7 @@ client = deathbycaptcha.HttpClient(username, password)
 Captcha_dict = {
     'proxy': 'http://user:password@127.0.0.1:1234',
     'proxytype': 'HTTP',
-    'googlekey': 'PUZZLE_asmMMQmoimm2msomdm2',
+    'captchakey': 'PUZZLE_asmMMQmoimm2msomdm2',
     'pageurl': 'https://www.capy.me/products/puzzle_captcha/',
     'api_server': 'https://www.capy.me/'}
 
