@@ -15,7 +15,7 @@
 
 ## 📖 Introduction
 
-The [DeathByCaptcha](https://deathbycaptcha.com) Python client provides a simple, well-documented interface to the [DeathByCaptcha](https://deathbycaptcha.com) solving service. It supports both the HTTPS API (encrypted transport — recommended when security is a priority) and the socket-based API (faster and lower latency, recommended for high-throughput production workloads).
+The [DeathByCaptcha](https://deathbycaptcha.com) Python client is the official library for the DeathByCaptcha **captcha solving service**. It provides a simple, well-documented interface for integrating CAPTCHA solving into automation workflows — a particularly common need when you use it as a **captcha solver for web scraping**, where CAPTCHAs block access to the pages you need to extract data from. It supports both the HTTPS API (encrypted transport — recommended when security is a priority) and the socket-based API (faster and lower latency, recommended for high-throughput production workloads).
 
 Key features:
 
