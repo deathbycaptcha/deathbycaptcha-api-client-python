@@ -8,8 +8,8 @@ This guide explains how to configure credentials for running tests in different 
 |------------|------------------|--------|
 | **Local Development** | `.env` (local, not committed) | Environment variables from .env file |
 | **gitlab-ci-local** | `.env` (local, not committed) | Load .env and pipe to gitlab-ci-local |
-| **GitHub Actions** | Repository Secrets | `DBC_USERNAME`, `DBC_PASSWORD` secrets |
-| **GitLab CI** | Project CI/CD Variables | `DBC_USERNAME`, `DBC_PASSWORD` variables |
+| **GitHub Actions** | Repository Secrets | `DBC_USERNAME`, `DBC_PASSWORD`, `DBC_AUTHTOKEN` secrets |
+| **GitLab CI** | Project CI/CD Variables | `DBC_USERNAME`, `DBC_PASSWORD`, `DBC_AUTHTOKEN` variables |
 
 ## Local Development Setup
 
@@ -30,6 +30,8 @@ npm install -g @ezbz/gitlab-ci-local
    ```bash
    DBC_TEST_USERNAME=your_username
    DBC_TEST_PASSWORD=your_password
+   # Or use authtoken instead of username/password:
+   DBC_TEST_AUTHTOKEN=your_authtoken
    ```
 
 3. The `.env` file is in `.gitignore` - it won't be committed to git
@@ -41,8 +43,8 @@ npm install -g @ezbz/gitlab-ci-local
 
 ### What happens
 - `python-dotenv` loads variables from `.env` into environment
-- Tests read `DBC_TEST_USERNAME` and `DBC_TEST_PASSWORD` from environment
-- If credentials are missing, tests raise a clear error
+- Tests read `DBC_TEST_USERNAME` and `DBC_TEST_PASSWORD` (or `DBC_TEST_AUTHTOKEN`) from environment
+- If no valid credentials are set, tests raise a clear error
 
 ## Testing GitLab CI Pipeline Locally
 
@@ -77,7 +79,8 @@ set +a
 gitlab-ci-local \
   --file ./.gitlab-ci.yml \
   --variable "DBC_USERNAME=$DBC_TEST_USERNAME" \
-  --variable "DBC_PASSWORD=$DBC_TEST_PASSWORD"
+  --variable "DBC_PASSWORD=$DBC_TEST_PASSWORD" \
+  --variable "DBC_AUTHTOKEN=$DBC_TEST_AUTHTOKEN"
 ```
 
 ### Why --variable flags?
@@ -103,10 +106,11 @@ Already configured in `.github/workflows/tests.yml`
 4. Add:
    - Name: `DBC_USERNAME`, Value: `your_username`
    - Name: `DBC_PASSWORD`, Value: `your_password`
+   - Name: `DBC_AUTHTOKEN`, Value: `your_authtoken` (alternative to username/password)
 
 ### What happens
 - GitHub Actions exposes secrets as environment variables
-- Workflow passes them as `DBC_TEST_USERNAME` and `DBC_TEST_PASSWORD`
+- Workflow passes them as `DBC_TEST_USERNAME`, `DBC_TEST_PASSWORD`, and `DBC_TEST_AUTHTOKEN`
 - Tests read from environment variables
 
 ### PyPI Publishing (Optional)
@@ -157,10 +161,18 @@ Configured in `.gitlab-ci.yml` variables section
 - **Protect variable**: ✓
 - **Mask variable**: ✓
 
+#### Step 4: Add DBC_AUTHTOKEN Variable (alternative to username/password)
+- **Key**: `DBC_AUTHTOKEN`
+- **Value**: `your_authtoken`
+- **Type**: Variable
+- **Scope**: All
+- **Protect variable**: ✓
+- **Mask variable**: ✓
+
 ### What happens
-- `.gitlab-ci.yml` defines `DBC_TEST_USERNAME: ${DBC_USERNAME}` etc.
+- `.gitlab-ci.yml` defines `DBC_TEST_USERNAME: ${DBC_USERNAME}`, `DBC_TEST_PASSWORD: ${DBC_PASSWORD}`, and `DBC_TEST_AUTHTOKEN: ${DBC_AUTHTOKEN}`
 - GitLab CI injects these variables into all jobs
-- Tests read `DBC_TEST_USERNAME` and `DBC_TEST_PASSWORD` from environment
+- Tests read credentials from environment, preferring authtoken when set
 
 ### Verification
 1. Go to CI/CD → Pipelines
@@ -172,6 +184,7 @@ Configured in `.gitlab-ci.yml` variables section
 The tests always expect these variable names:
 - `DBC_TEST_USERNAME` - Account username
 - `DBC_TEST_PASSWORD` - Account password
+- `DBC_TEST_AUTHTOKEN` - Account authtoken (alternative to username/password; takes precedence when set)
 
 Each CI/CD platform maps its credentials to these:
 
@@ -180,6 +193,7 @@ Each CI/CD platform maps its credentials to these:
 env:
   DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
   DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
+  DBC_TEST_AUTHTOKEN: ${{ secrets.DBC_AUTHTOKEN }}
 ```
 
 **GitLab CI:**
@@ -187,6 +201,7 @@ env:
 variables:
   DBC_TEST_USERNAME: ${DBC_USERNAME}
   DBC_TEST_PASSWORD: ${DBC_PASSWORD}
+  DBC_TEST_AUTHTOKEN: ${DBC_AUTHTOKEN}
 ```
 
 **Local:**
@@ -194,6 +209,7 @@ variables:
 # .env file
 DBC_TEST_USERNAME=...
 DBC_TEST_PASSWORD=...
+DBC_TEST_AUTHTOKEN=...  # optional alternative
 ```
 
 ## Testing Your Configuration
@@ -225,12 +241,12 @@ Push to branch and check **Actions** tab
 
 **Solution for GitHub Actions:**
 - Go to **Settings** → **Secrets and variables** → **Actions**
-- Verify `DBC_USERNAME` and `DBC_PASSWORD` are configured
+- Verify `DBC_USERNAME`, `DBC_PASSWORD`, or `DBC_AUTHTOKEN` are configured
 - Trigger a new workflow run
 
 **Solution for GitLab CI:**
 - Go to **Settings** → **CI/CD** → **Variables**
-- Verify `DBC_USERNAME` and `DBC_PASSWORD` are configured
+- Verify `DBC_USERNAME`, `DBC_PASSWORD`, or `DBC_AUTHTOKEN` are configured
 - Check variable scope (should include current branch)
 - Manually trigger pipeline in **CI/CD** → **Pipelines** → **Run pipeline**
 

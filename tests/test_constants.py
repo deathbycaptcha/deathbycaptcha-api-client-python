@@ -21,7 +21,7 @@ class TestConstants(unittest.TestCase):
         """Test API_VERSION is correctly formatted."""
         self.assertIsInstance(API_VERSION, str)
         self.assertIn("DBC/Python", API_VERSION)
-        # Verify version format (e.g., "DBC/Python v4.7.1")
+        # Verify version format (e.g., "DBC/Python v4.7.2")
         self.assertTrue(API_VERSION.startswith("DBC/Python v"))
         # Extract version number and verify it has the expected format
         version_part = API_VERSION.split("v")[-1]
