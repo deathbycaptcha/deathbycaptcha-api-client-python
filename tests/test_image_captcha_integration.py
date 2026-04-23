@@ -30,9 +30,11 @@ class TestTextCaptchaIntegration(unittest.TestCase):
         """Set up test fixtures."""
         cls.username = os.getenv('DBC_TEST_USERNAME')
         cls.password = os.getenv('DBC_TEST_PASSWORD')
-        if not cls.username or not cls.password:
+        cls.authtoken = os.getenv('DBC_TEST_AUTHTOKEN')
+
+        if not cls.authtoken and not (cls.username and cls.password):
             raise unittest.SkipTest(
-                "Skipping image CAPTCHA integration tests: missing DBC_TEST_USERNAME/DBC_TEST_PASSWORD"
+                "Skipping image CAPTCHA integration tests: missing DBC_TEST_AUTHTOKEN or DBC_TEST_USERNAME/DBC_TEST_PASSWORD"
             )
         cls.image_captcha_path = (
             Path(__file__).resolve().parents[1] / 'examples' / 'images' / 'normal.jpg'
@@ -55,7 +57,7 @@ class TestTextCaptchaIntegration(unittest.TestCase):
         3. Polls the API multiple times with backoff until solved
         4. Verifies the solution exists
         """
-        client = HttpClient(self.username, self.password)
+        client = HttpClient(authtoken=self.authtoken) if self.authtoken else HttpClient(self.username, self.password)
         
         try:
             # Upload a normal image CAPTCHA (type=0)
@@ -107,7 +109,7 @@ class TestTextCaptchaIntegration(unittest.TestCase):
         
         Similar to HTTP test but using SocketClient for faster polling.
         """
-        client = SocketClient(self.username, self.password)
+        client = SocketClient(authtoken=self.authtoken) if self.authtoken else SocketClient(self.username, self.password)
         
         try:
             # Upload a normal image CAPTCHA (type=0)

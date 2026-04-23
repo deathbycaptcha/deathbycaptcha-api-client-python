@@ -19,8 +19,8 @@ source .env
 set +a
 
 # Verify credentials are set
-if [ -z "$DBC_TEST_USERNAME" ] || [ -z "$DBC_TEST_PASSWORD" ]; then
-    echo "❌ Error: DBC_TEST_USERNAME and/or DBC_TEST_PASSWORD not set in .env"
+if [ -z "$DBC_TEST_AUTHTOKEN" ] && { [ -z "$DBC_TEST_USERNAME" ] || [ -z "$DBC_TEST_PASSWORD" ]; }; then
+    echo "❌ Error: Set DBC_TEST_AUTHTOKEN or both DBC_TEST_USERNAME and DBC_TEST_PASSWORD in .env"
     exit 1
 fi
 
@@ -34,5 +34,6 @@ gitlab-ci-local \
   --file ./.gitlab-ci.yml \
   --variable "DBC_USERNAME=$DBC_TEST_USERNAME" \
   --variable "DBC_PASSWORD=$DBC_TEST_PASSWORD" \
+  --variable "DBC_AUTHTOKEN=$DBC_TEST_AUTHTOKEN" \
   "$@"
 

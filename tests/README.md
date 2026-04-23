@@ -83,7 +83,7 @@ Current test coverage includes:
 The project includes `.github/workflows/tests.yml` which automatically runs tests on every push/PR:
 
 #### Main Test Job
-- Runs on Python versions: 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14
+- Runs on Python versions: 3.10, 3.11, 3.12, 3.13, 3.14
 - Runs full test suite with code coverage
 - Uploads coverage reports
 
