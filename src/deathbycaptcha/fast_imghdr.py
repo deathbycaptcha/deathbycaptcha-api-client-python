@@ -5,10 +5,7 @@
 # Licensed under the Python Software Foundation License.
 # See: https://docs.python.org/3/license.html
 
-import sys
-
-if sys.version_info[0] >= 3:
-    from os import PathLike
+from os import PathLike
 
 __all__ = ["what"]
 
@@ -21,11 +18,7 @@ def what(file, h=None):
     f = None
     try:
         if h is None:
-            if sys.version_info[0] < 3:
-                file_types = (str)
-            else:
-                file_types = (str, PathLike)
-            if isinstance(file, file_types):
+            if isinstance(file, (str, PathLike)):
                 f = open(file, 'rb')
                 h = f.read(32)
             else:
@@ -95,14 +88,9 @@ tests.append(test_rgb)
 
 def test_pbm(h, f):
     """PBM (portable bitmap)"""
-    if sys.version_info[0] < 3:
-        if len(h) >= 3 and \
-                h[0] == 'P' and h[1] in '14' and h[2] in ' \t\n\r':
-            return 'pbm'
-    else:
-        if len(h) >= 3 and \
-                h[0] == ord(b'P') and h[1] in b'14' and h[2] in b' \t\n\r':
-            return 'pbm'
+    if len(h) >= 3 and \
+            h[0] == ord(b'P') and h[1] in b'14' and h[2] in b' \t\n\r':
+        return 'pbm'
 
 
 tests.append(test_pbm)
@@ -110,14 +98,9 @@ tests.append(test_pbm)
 
 def test_pgm(h, f):
     """PGM (portable graymap)"""
-    if sys.version_info[0] < 3:
-        if len(h) >= 3 and \
-                h[0] == 'P' and h[1] in '25' and h[2] in ' \t\n\r':
-            return 'pgm'
-    else:
-        if len(h) >= 3 and \
-                h[0] == ord(b'P') and h[1] in b'25' and h[2] in b' \t\n\r':
-            return 'pgm'
+    if len(h) >= 3 and \
+            h[0] == ord(b'P') and h[1] in b'25' and h[2] in b' \t\n\r':
+        return 'pgm'
 
 
 tests.append(test_pgm)
@@ -125,14 +108,9 @@ tests.append(test_pgm)
 
 def test_ppm(h, f):
     """PPM (portable pixmap)"""
-    if sys.version_info[0] < 3:
-        if len(h) >= 3 and \
-                h[0] == 'P' and h[1] in '36' and h[2] in ' \t\n\r':
-            return 'ppm'
-    else:
-        if len(h) >= 3 and \
-                h[0] == ord(b'P') and h[1] in b'36' and h[2] in b' \t\n\r':
-            return 'ppm'
+    if len(h) >= 3 and \
+            h[0] == ord(b'P') and h[1] in b'36' and h[2] in b' \t\n\r':
+        return 'ppm'
 
 
 tests.append(test_ppm)
@@ -220,5 +198,3 @@ def testall(list, recursive, toplevel):
                 print(what(filename))
             except OSError:
                 print('*** not found ***')
-
-

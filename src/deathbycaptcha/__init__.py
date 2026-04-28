@@ -78,17 +78,11 @@ import threading
 import time
 import requests
 from . import fast_imghdr
-try:
-    from json import read as json_decode, write as json_encode
-except ImportError:
-    try:
-        from json import loads as json_decode, dumps as json_encode
-    except ImportError:
-        from simplejson import loads as json_decode, dumps as json_encode
+from json import loads as json_decode, dumps as json_encode
 
 
 # API version and unique software ID
-API_VERSION = 'DBC/Python v4.7.1'
+API_VERSION = 'DBC/Python v4.7.2'
 
 # Default CAPTCHA timeout and decode() polling interval
 DEFAULT_TIMEOUT = 60
@@ -152,7 +146,7 @@ class Client(object):
 
     def _log(self, cmd, msg=''):
         if self.is_verbose:
-            print('%d %s %s' % (time.time(), cmd, msg.rstrip()))
+            print(f'{int(time.time())} {cmd} {msg.rstrip()}')
         return self
 
     def close(self):
@@ -234,8 +228,8 @@ class HttpClient(Client):
 
     """Death by Captcha HTTP API client."""
 
-    def __init__(self, *args):
-        Client.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        Client.__init__(self, *args, **kwargs)
 
     def _call(self, cmd, payload=None, headers=None, files=None):
         if headers is None:
@@ -273,7 +267,13 @@ class HttpClient(Client):
         return {}
 
     def get_user(self):
-        return self._call('user', self.get_auth()) or {'user': 0}
+        resp = self._call('user', self.get_auth()) or {'user': 0}
+
+        # Keep user ID as int for consistency
+        if 'user' in resp:
+            resp['user'] = int(resp['user'])
+
+        return resp
 
     def get_captcha(self, cid):
         return self._call('captcha/%d' % cid) or {'captcha': 0}
@@ -302,8 +302,8 @@ class SocketClient(Client):
 
     TERMINATOR = bytes('\r\n', 'ascii')
 
-    def __init__(self, *args):
-        Client.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        Client.__init__(self, *args, **kwargs)
         self.socket_lock = threading.Lock()
         self.socket = None
 
@@ -410,26 +410,33 @@ class SocketClient(Client):
             return response
 
         error = response['error']
-        if error in ('not-logged-in', 'invalid-credentials'):
-            raise AccessDeniedException('Access denied, check your credentials')
-        elif 'banned' == error:
-            raise AccessDeniedException('Access denied, account is suspended')
-        elif 'insufficient-funds' == error:
-            raise AccessDeniedException(
-                'CAPTCHA was rejected due to low balance')
-        elif 'invalid-captcha' == error:
-            raise ValueError('CAPTCHA is not a valid image')
-        elif 'service-overload' == error:
-            raise OverflowError(
-                'CAPTCHA was rejected due to service overload, try again later')
-        else:
-            self.socket_lock.acquire()
-            self.close()
-            self.socket_lock.release()
-            raise RuntimeError('API server error occured: %s' % error)
+        match error:
+            case 'not-logged-in' | 'invalid-credentials':
+                raise AccessDeniedException('Access denied, check your credentials')
+            case 'banned':
+                raise AccessDeniedException('Access denied, account is suspended')
+            case 'insufficient-funds':
+                raise AccessDeniedException(
+                    'CAPTCHA was rejected due to low balance')
+            case 'invalid-captcha':
+                raise ValueError('CAPTCHA is not a valid image')
+            case 'service-overload':
+                raise OverflowError(
+                    'CAPTCHA was rejected due to service overload, try again later')
+            case _:
+                self.socket_lock.acquire()
+                self.close()
+                self.socket_lock.release()
+                raise RuntimeError(f'API server error occured: {error}')
 
     def get_user(self):
-        return self._call('user') or {'user': 0}
+        resp = self._call('user') or {'user': 0}
+
+        # Keep user ID as int for consistency
+        if 'user' in resp:
+            resp['user'] = int(resp['user'])
+
+        return resp
 
     def get_captcha(self, cid):
         return self._call('captcha', {'captcha': cid}) or {'captcha': 0}

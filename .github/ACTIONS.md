@@ -40,7 +40,7 @@ The integration tests in `tests/test_integration_balance.py` will use these envi
 
 ## Workflows
 
-##### 1. **test** - Full test matrix (Python 3.8-3.14)
+##### 1. **test** - Full test matrix (Python 3.10-3.14)
 - Runs standard test suite on all supported Python versions
 - Full code coverage reporting:
   - Coverage percentage of entire codebase

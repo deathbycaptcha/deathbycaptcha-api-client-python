@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.2] - 2026-04-23
+
+### Added
+- `DBC_TEST_AUTHTOKEN` environment variable support as an alternative authentication method to username/password across all integration tests
+  - `tests/test_integration_balance.py`: all three test classes accept authtoken; credential check passes if either authtoken or username+password is set
+  - `tests/test_image_captcha_integration.py`: skip logic updated to accept authtoken as an alternative
+- `test:python3.10` job in `.gitlab-ci.yml` with full coverage reporting (`--cov-report=html`)
+- `DBC_TEST_AUTHTOKEN` / `DBC_AUTHTOKEN` variable propagation in:
+  - `.gitlab-ci.yml` pipeline variables
+  - `.github/workflows/tests.yml` all job `env:` blocks
+  - `run-gitlab-ci-local.sh` credential check and `--variable` flag
+  - `.env.sample` template
+  - `CREDENTIALS.md` documentation
+
 ## [4.7.1] - 2026-03-09
 
 ### Added

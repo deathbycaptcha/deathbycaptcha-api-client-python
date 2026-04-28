@@ -27,10 +27,20 @@ For integration tests that require API credentials:
    DBC_TEST_PASSWORD=your_password
    ```
 
+   Or use an authtoken instead of username/password:
+   ```bash
+   DBC_TEST_AUTHTOKEN=your_authtoken
+   ```
+
 3. **Alternative: Use environment variables directly:**
    ```bash
    export DBC_TEST_USERNAME=your_username
    export DBC_TEST_PASSWORD=your_password
+   ```
+
+   Or with authtoken:
+   ```bash
+   export DBC_TEST_AUTHTOKEN=your_authtoken
    ```
 
 ⚠️ **Important:** The `.env` file is in `.gitignore` and will never be committed to version control. Keep your credentials secure!
@@ -83,7 +93,7 @@ Current test coverage includes:
 The project includes `.github/workflows/tests.yml` which automatically runs tests on every push/PR:
 
 #### Main Test Job
-- Runs on Python versions: 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14
+- Runs on Python versions: 3.10, 3.11, 3.12, 3.13, 3.14
 - Runs full test suite with code coverage
 - Uploads coverage reports
 
@@ -127,6 +137,7 @@ The Python 3.14 job generates the coverage badge displayed in the README, showin
 
 The project includes a `.gitlab-ci.yml` file that automatically runs tests on:
 
+- Python 3.10
 - Python 3.11
 - Python 3.12
 - Python 3.13

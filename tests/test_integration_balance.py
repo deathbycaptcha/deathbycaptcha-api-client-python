@@ -8,6 +8,7 @@ Configuration:
     Set credentials via environment variables:
     - DBC_TEST_USERNAME: Your DBC account username
     - DBC_TEST_PASSWORD: Your DBC account password
+    - DBC_TEST_AUTHTOKEN: Your DBC account authtoken (alternative to username/password)
     
     Or create a .env file (see .env.sample for template)
 """
@@ -39,16 +40,18 @@ class TestHttpClientRealBalance(unittest.TestCase):
         """Set up test fixtures for HTTP client tests."""
         cls.username = os.getenv('DBC_TEST_USERNAME')
         cls.password = os.getenv('DBC_TEST_PASSWORD')
-        if not cls.username or not cls.password:
+        cls.authtoken = os.getenv('DBC_TEST_AUTHTOKEN')
+
+        if not cls.authtoken and not (cls.username and cls.password):
             raise ValueError(
-                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
-                "environment variables or create a .env file."
+                "Missing credentials. Set DBC_TEST_AUTHTOKEN or both DBC_TEST_USERNAME "
+                "and DBC_TEST_PASSWORD environment variables or create a .env file."
             )
         cls.client = None
 
     def setUp(self):
         """Create a fresh HttpClient instance for each test."""
-        self.client = HttpClient(self.username, self.password)
+        self.client = HttpClient(authtoken=self.authtoken) if self.authtoken else HttpClient(self.username, self.password)
 
     def tearDown(self):
         """Clean up after each test."""
@@ -168,16 +171,18 @@ class TestSocketClientRealBalance(unittest.TestCase):
         """Set up test fixtures for Socket client tests."""
         cls.username = os.getenv('DBC_TEST_USERNAME')
         cls.password = os.getenv('DBC_TEST_PASSWORD')
-        if not cls.username or not cls.password:
+        cls.authtoken = os.getenv('DBC_TEST_AUTHTOKEN')
+
+        if not cls.authtoken and not (cls.username and cls.password):
             raise ValueError(
-                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
-                "environment variables or create a .env file."
+                "Missing credentials. Set DBC_TEST_AUTHTOKEN or both DBC_TEST_USERNAME "
+                "and DBC_TEST_PASSWORD environment variables or create a .env file."
             )
         cls.client = None
 
     def setUp(self):
         """Create a fresh SocketClient instance for each test."""
-        self.client = SocketClient(self.username, self.password)
+        self.client = SocketClient(authtoken=self.authtoken) if self.authtoken else SocketClient(self.username, self.password)
 
     def tearDown(self):
         """Clean up socket connection after each test."""
@@ -265,10 +270,6 @@ class TestSocketClientRealBalance(unittest.TestCase):
         self.assertGreaterEqual(balance, 0)
         self.assertGreaterEqual(user_balance, 0)
 
-
-
-
-
     def test_socket_multiple_concurrent_operations(self):
         """Test that multiple operations work in sequence via socket."""
         # First get user
@@ -311,16 +312,24 @@ class TestHttpVsSocketConsistency(unittest.TestCase):
         """Set up test fixtures."""
         cls.username = os.getenv('DBC_TEST_USERNAME')
         cls.password = os.getenv('DBC_TEST_PASSWORD')
-        if not cls.username or not cls.password:
+        cls.authtoken = os.getenv('DBC_TEST_AUTHTOKEN')
+
+        if not cls.authtoken and not (cls.username and cls.password):
             raise ValueError(
-                "Missing credentials. Set DBC_TEST_USERNAME and DBC_TEST_PASSWORD "
-                "environment variables or create a .env file."
+                "Missing credentials. Set DBC_TEST_AUTHTOKEN or both DBC_TEST_USERNAME "
+                "and DBC_TEST_PASSWORD environment variables or create a .env file."
             )
+
+    def _make_http_client(self):
+        return HttpClient(authtoken=self.authtoken) if self.authtoken else HttpClient(self.username, self.password)
+
+    def _make_socket_client(self):
+        return SocketClient(authtoken=self.authtoken) if self.authtoken else SocketClient(self.username, self.password)
 
     def test_http_and_socket_balance_consistency(self):
         """Test that both HTTP and Socket clients return valid balance values."""
-        http_client = HttpClient(self.username, self.password)
-        socket_client = SocketClient(self.username, self.password)
+        http_client = self._make_http_client()
+        socket_client = self._make_socket_client()
         
         try:
             http_balance = http_client.get_balance()
@@ -335,8 +344,8 @@ class TestHttpVsSocketConsistency(unittest.TestCase):
 
     def test_http_and_socket_user_consistency(self):
         """Test that both HTTP and Socket clients return the same user data."""
-        http_client = HttpClient(self.username, self.password)
-        socket_client = SocketClient(self.username, self.password)
+        http_client = self._make_http_client()
+        socket_client = self._make_socket_client()
         
         try:
             http_user = http_client.get_user()
@@ -358,8 +367,8 @@ class TestHttpVsSocketConsistency(unittest.TestCase):
 
     def test_http_and_socket_user_id_validity(self):
         """Test that both clients return a valid user ID."""
-        http_client = HttpClient(self.username, self.password)
-        socket_client = SocketClient(self.username, self.password)
+        http_client = self._make_http_client()
+        socket_client = self._make_socket_client()
         
         try:
             http_user_id = http_client.get_user().get('user')
@@ -373,7 +382,6 @@ class TestHttpVsSocketConsistency(unittest.TestCase):
         finally:
             http_client.close()
             socket_client.close()
-
 
 
 if __name__ == '__main__':

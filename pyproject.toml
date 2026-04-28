@@ -6,20 +6,16 @@ requires = [
 build-backend = "setuptools.build_meta"
 [project]
 name = "deathbycaptcha-official"
-version = "4.7.1"
+version = "4.7.2"
 description = "Official DeathByCaptcha API Client Library"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "DBC Developers Team", email = "deathbycaptcha@protonmail.com"}
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -39,6 +35,7 @@ dev = [
     "pytest>=6.0",
     "pytest-cov>=2.12.0",
     "coverage>=5.5",
+    "python-dotenv>=0.19.0",
 ]
 
 [project.urls]

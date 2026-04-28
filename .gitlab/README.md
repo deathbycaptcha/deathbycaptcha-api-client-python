@@ -29,11 +29,16 @@ set -a
 source .env
 set +a
 
-# Run with --variable flags
+# Run with username/password variables
 gitlab-ci-local \
   --file ./.gitlab-ci.yml \
   --variable "DBC_USERNAME=$DBC_TEST_USERNAME" \
   --variable "DBC_PASSWORD=$DBC_TEST_PASSWORD"
+
+# or with authtoken variable
+gitlab-ci-local \
+  --file ./.gitlab-ci.yml \
+  --variable "DBC_AUTHTOKEN=$DBC_TEST_AUTHTOKEN"
 ```
 
 ### Option 3: Advanced - using gitlab-ci-local directly
@@ -42,6 +47,10 @@ gitlab-ci-local \
 # If you prefer to set variables differently
 export DBC_USERNAME=your_username
 export DBC_PASSWORD=your_password
+
+# Or use authtoken instead:
+export DBC_AUTHTOKEN=your_authtoken
+
 gitlab-ci-local --file ./.gitlab-ci.yml
 ```
 
@@ -49,13 +58,18 @@ gitlab-ci-local --file ./.gitlab-ci.yml
 
 ## Required CI/CD Variables
 
-The following variables must be configured in your GitLab project:
+The following variables must be configured in your GitLab project.
+
+You can authenticate with either **username/password** or an **authtoken**:
 
 ### DBC_USERNAME
 Your DeathByCaptcha account username for running integration tests.
 
 ### DBC_PASSWORD
 Your DeathByCaptcha account password for running integration tests.
+
+### DBC_AUTHTOKEN
+Your DeathByCaptcha account authtoken (alternative to username/password). If set, takes precedence over username/password.
 
 ## Setting Up Variables in GitLab
 
@@ -65,7 +79,7 @@ Your DeathByCaptcha account password for running integration tests.
 2. Navigate to **Settings** → **CI/CD** → **Variables**
 3. Click **Add variable**
 4. For each variable:
-   - **Key**: `DBC_USERNAME` (or `DBC_PASSWORD`)
+   - **Key**: `DBC_USERNAME`, `DBC_PASSWORD`, or `DBC_AUTHTOKEN`
    - **Value**: Your credentials
    - **Type**: Variable
    - **Scope**: All (or specific branch)
@@ -84,6 +98,7 @@ The `.gitlab-ci.yml` file automatically passes these variables to all test jobs:
 variables:
   DBC_TEST_USERNAME: ${DBC_USERNAME}
   DBC_TEST_PASSWORD: ${DBC_PASSWORD}
+  DBC_TEST_AUTHTOKEN: ${DBC_AUTHTOKEN}
 ```
 
 These are then used by the tests in `tests/test_integration_balance.py`:
@@ -91,11 +106,13 @@ These are then used by the tests in `tests/test_integration_balance.py`:
 ```python
 username = os.getenv('DBC_TEST_USERNAME')
 password = os.getenv('DBC_TEST_PASSWORD')
+authtoken = os.getenv('DBC_TEST_AUTHTOKEN')
 ```
 
 ## CI/CD Pipeline
 
 The pipeline runs:
+- **test:python3.10** - Minimal Python version
 - **test:python3.11** - Primary Python version
 - **test:python3.12** - LTS version
 - **test:python3.13** - Latest stable
@@ -133,7 +150,7 @@ The `.env` file is in `.gitignore` and won't be committed.
 
 ### Tests fail with "Missing credentials" error
 
-This means `DBC_USERNAME` and `DBC_PASSWORD` environment variables are not set. Check:
+This means neither `DBC_AUTHTOKEN` nor `DBC_USERNAME`/`DBC_PASSWORD` environment variables are set. Check:
 1. Variables are configured in **Settings → CI/CD → Variables**
 2. Variable scope includes the current branch
 3. Pipeline was run after variables were configured (may need to re-run)
