@@ -69,6 +69,7 @@ if captcha:
     - [Amazon WAF API (Type 16)](#amazon-waf-api-faq)
     - [Cloudflare Turnstile API (Type 12)](#cloudflare-turnstile-api-faq)
     - [Featured Sample: Selenium reCAPTCHA v2](#-featured-sample-selenium-recaptcha-v2)
+    - [Featured Sample: Playwright reCAPTCHA v2](#-featured-sample-playwright-recaptcha-v2)
 
 
 <a id="installation"></a>
