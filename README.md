@@ -688,6 +688,10 @@ This repository includes an integrated Playwright sample at:
 
 Use this sample when you need a browser-automation flow that extracts `sitekey`, requests a token using DeathByCaptcha (`type=4`), injects it into the page, and submits the form — using Playwright instead of Selenium.
 
+Included examples:
+- `python_playwright_example.py` — reCAPTCHA v2
+- `python_playwright_amazon_waf_example.py` — Amazon WAF
+
 Quick run:
 
 ```bash
