@@ -75,6 +75,7 @@ jobs:
       env:
         DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
+        CHARSET_NORMALIZER_USE_C_EXTENSION: "0"
       run: python -m pytest tests/ -v
 
   test-image-captcha-python3-14:
@@ -95,7 +96,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .
-        pip install pytest pytest-cov
+        pip install pytest
     
     - name: Run all tests with coverage (Python 3.14)
       env:
