@@ -71,7 +71,7 @@ jobs:
         pip install -e .
         pip install pytest
         SITE=$(python -c "import site; print(site.getsitepackages()[0])")
-        rm -f "$SITE"/charset_normalizer/cd.*.so || true
+        rm -f "$SITE"/charset_normalizer/*.so || true
     
     - name: Run tests
       env:
