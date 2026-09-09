@@ -72,6 +72,7 @@ jobs:
         pip install pytest
         SITE=$(python -c "import site; print(site.getsitepackages()[0])")
         rm -f "$SITE"/charset_normalizer/*.so || true
+        pip uninstall -y simplejson
     
     - name: Run tests
       env:
