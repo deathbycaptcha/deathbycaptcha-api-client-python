@@ -66,19 +66,17 @@ jobs:
       run: python -V
     
     - name: Install dependencies
-      env:
-        CHARSET_NORMALIZER_USE_C_EXTENSION: "0"
       run: |
         python -m pip install --upgrade pip
-        pip install charset_normalizer
         pip install -e .
         pip install pytest
+        SITE=$(python -c "import site; print(site.getsitepackages()[0])")
+        rm -f "$SITE"/charset_normalizer/cd.*.so || true
     
     - name: Run tests
       env:
         DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
-        CHARSET_NORMALIZER_USE_C_EXTENSION: "0"
       run: python -m pytest tests/ -v
 
   test-image-captcha-python3-14:
