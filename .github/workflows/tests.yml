@@ -70,21 +70,11 @@ jobs:
         pip install -e .
         pip install coverage pytest pytest-cov
     
-    - name: Run tests with coverage
+    - name: Run tests
       env:
         DBC_TEST_USERNAME: ${{ secrets.DBC_USERNAME }}
         DBC_TEST_PASSWORD: ${{ secrets.DBC_PASSWORD }}
-      run: python -m pytest tests/ -v --cov=src/deathbycaptcha --cov-report=term --cov-report=xml --junit-xml=report.xml
-    
-    - name: Upload coverage reports
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-reports-py3.15.0-alpha.5
-        path: |
-          report.xml
-          coverage.xml
-        retention-days: 30
+      run: python -m pytest tests/ -v
 
   test-image-captcha-python3-14:
     runs-on: ubuntu-latest
