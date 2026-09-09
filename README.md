@@ -678,6 +678,32 @@ See detailed usage in [examples/deathbycaptcha-python-selenium/README.md](exampl
 
 ---
 
+<a id="-featured-sample-playwright-recaptcha-v2"></a>
+### ⭐ Featured Sample: Playwright reCAPTCHA v2
+
+This repository includes an integrated Playwright sample at:
+
+- `examples/deathbycaptcha-python-playwright/`
+
+Use this sample when you need a browser-automation flow that extracts `sitekey`, requests a token using DeathByCaptcha (`type=4`), injects it into the page, and submits the form — using Playwright instead of Selenium.
+
+Quick run:
+
+```bash
+pip install -e .
+pip install -r examples/deathbycaptcha-python-playwright/requirements.txt
+playwright install
+cp examples/deathbycaptcha-python-playwright/.env.example examples/deathbycaptcha-python-playwright/.env
+
+# edit .env with DBC_USERNAME and DBC_PASSWORD
+cd examples/deathbycaptcha-python-playwright
+python python_playwright_example.py
+```
+
+See detailed usage in [examples/deathbycaptcha-python-playwright/README.md](examples/deathbycaptcha-python-playwright/README.md).
+
+---
+
 <a id="recaptcha-image-based-api"></a>
 ### ⛔ reCAPTCHA Image-Based API — Deprecated (Types 2 & 3)
 
