@@ -88,7 +88,7 @@ class TestPlaywrightIntegration(unittest.TestCase):
                     print("[PLAYWRIGHT-IT] requesting token from DBC")
                     try:
                         solution = client.decode(
-                            timeout=client.default_token_timeout,
+                            timeout=90,
                             type=4,
                             token_params=captcha_params
                         )
