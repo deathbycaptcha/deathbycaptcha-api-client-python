@@ -111,7 +111,7 @@ class TestPlaywrightIntegration(unittest.TestCase):
 
                     page.wait_for_selector('.recaptcha-success', timeout=15000)
                     success_text = page.text_content('.recaptcha-success') or ''
-                    self.assertIn('Verification Success', success_text, case=False)
+                    self.assertIn('Verification Success', success_text)
                     print(f"[PLAYWRIGHT-IT] successText='{success_text}'")
                     print("[PLAYWRIGHT-IT] PASS")
 
