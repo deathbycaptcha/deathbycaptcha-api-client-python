@@ -71,6 +71,7 @@ Visit http://www.deathbycaptcha.com/user/api for updates.
 import base64
 import errno
 import random
+import re
 import select
 import socket
 import sys
@@ -136,7 +137,10 @@ class Client(object):
     """Death by Captcha API Client."""
 
     def __init__(self, username=None, password=None, authtoken=None):
-        self.is_verbose = True
+        # Verbose prints every request and response; off by default so a
+        # real account is never written to a terminal or a CI log by
+        # accident.
+        self.is_verbose = False
         self.userpwd = {'username': username, 'password': password}
         if authtoken:
             self.authtoken = {'authtoken': authtoken}
@@ -152,8 +156,18 @@ class Client(object):
 
     def _log(self, cmd, msg=''):
         if self.is_verbose:
-            print('%d %s %s' % (time.time(), cmd, msg.rstrip()))
+            print('%d %s %s' % (time.time(), cmd, self._redact(msg).rstrip()))
         return self
+
+    @staticmethod
+    def _redact(msg):
+        """Hide credential values before a verbose line is printed."""
+        text = str(msg)
+        for key in ('username', 'password', 'authtoken'):
+            text = re.sub(
+                r'(["\']%s["\']\s*[:=]\s*["\'])[^"\']*(["\'])' % key,
+                r'\1***\2', text)
+        return text
 
     def close(self):
         pass

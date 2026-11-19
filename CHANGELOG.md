@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Security
+- Verbose mode is off by default and redacts `username`, `password` and
+  `authtoken` when it is enabled.
+
+### Fixed
+- The Playwright reCAPTCHA v2 sample injects the token as a value instead of
+  JavaScript source, calls the widget callback, and no longer prints the
+  solved token.
+- The Playwright samples use the HTTPS client by default.
+
 ## [4.7.1] - 2026-03-09
 
 ### Added

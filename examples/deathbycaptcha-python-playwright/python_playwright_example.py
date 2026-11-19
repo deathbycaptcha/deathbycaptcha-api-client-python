@@ -21,14 +21,15 @@ CAPTCHA_URL = 'https://www.google.com/recaptcha/api2/demo'
 
 def solve_captcha(captcha: dict):
     json_captcha = json.dumps(captcha)
-    client = deathbycaptcha.SocketClient(USERNAME, PASSWORD)
+    # HTTPS by default; deathbycaptcha.SocketClient is the faster, plain
+    # TCP alternative for high-throughput jobs.
+    client = deathbycaptcha.HttpClient(USERNAME, PASSWORD)
 
     try:
         balance = client.get_balance()
         print('Balance: %s' % balance)
 
         print('Solving captcha...')
-        client.is_verbose = True
         result = client.decode(type=4, token_params=json_captcha)
 
         return result.get('text')
@@ -87,10 +88,35 @@ def main():
                 print('No captcha solution (maybe implement retry)...closing')
                 return
 
-            print('Solution: %s' % solution)
+            print('Token received (%d characters)' % len(solution))
             page.evaluate(
-                "document.getElementById('g-recaptcha-response').value='%s'" % solution
-            )
+                """(token) => {
+                    const textarea = document.getElementById('g-recaptcha-response');
+                    if (!textarea) return;
+
+                    textarea.style.display = 'block';
+                    textarea.value = token;
+                    textarea.innerHTML = token;
+                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+
+                    const clients = window.___grecaptcha_cfg && window.___grecaptcha_cfg.clients;
+                    if (!clients) return;
+                    for (const key of Object.keys(clients)) {
+                        const client = clients[key];
+                        for (const inner of Object.keys(client)) {
+                            const item = client[inner];
+                            if (item && typeof item.callback === 'function') {
+                                item.callback(token);
+                                return;
+                            }
+                            if (item && item.W && typeof item.W.callback === 'function') {
+                                item.W.callback(token);
+                                return;
+                            }
+                        }
+                    }
+                }""", solution)
 
             page.click('#recaptcha-demo-submit')
 

@@ -21,14 +21,14 @@ CAPTCHA_URL = os.getenv('AMAZON_WAF_URL', 'https://efw47fpad9.execute-api.us-eas
 
 def solve_waf_captcha(captcha: dict):
     json_captcha = json.dumps(captcha)
-    client = deathbycaptcha.SocketClient(USERNAME, PASSWORD)
+    # HTTPS by default; SocketClient is the faster, plain TCP alternative.
+    client = deathbycaptcha.HttpClient(USERNAME, PASSWORD)
 
     try:
         balance = client.get_balance()
         print('Balance: %s' % balance)
 
         print('Solving Amazon WAF captcha...')
-        client.is_verbose = True
         result = client.decode(type=16, waf_params=json_captcha)
 
         return result.get('text')
@@ -121,7 +121,7 @@ def main():
                 print('No captcha solution (maybe implement retry)...closing')
                 return
 
-            print('Solution: %s' % (solution[:50] + '...' if len(solution) > 50 else solution))
+            print('Token received (%d characters)' % len(solution))
 
             page.context.add_cookies([{
                 'name': 'aws-waf-token',
