@@ -1,0 +1,2 @@
+scrapy>=2.11
+deathbycaptcha-official>=4.7.1

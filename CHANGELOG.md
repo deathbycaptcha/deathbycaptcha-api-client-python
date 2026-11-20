@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Scrapy downloader middleware example (`examples/scrapy/`) for
+  cookie-based challenges, with a sample spider and a settings guide.
+
 ### Security
 - Verbose mode is off by default and redacts `username`, `password` and
   `authtoken` when it is enabled.

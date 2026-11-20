@@ -70,6 +70,7 @@ if captcha:
     - [Cloudflare Turnstile API (Type 12)](#cloudflare-turnstile-api-faq)
     - [Featured Sample: Selenium reCAPTCHA v2](#-featured-sample-selenium-recaptcha-v2)
     - [Featured Sample: Playwright reCAPTCHA v2](#-featured-sample-playwright-recaptcha-v2)
+    - [Example: Scrapy downloader middleware](#-example-scrapy-downloader-middleware)
 
 
 <a id="installation"></a>
@@ -706,6 +707,31 @@ python python_playwright_example.py
 ```
 
 See detailed usage in [examples/deathbycaptcha-python-playwright/README.md](examples/deathbycaptcha-python-playwright/README.md).
+
+---
+
+<a id="-example-scrapy-downloader-middleware"></a>
+### 🕷️ Example: Scrapy downloader middleware
+
+`examples/scrapy/` contains a downloader middleware that intercepts a
+cookie-based challenge, solves it with DeathByCaptcha and retries the request.
+
+- Works without a browser: Amazon WAF and DataDome cookie challenges.
+- Does not work without a browser: reCAPTCHA and GeeTest. Scrapy does not
+  execute JavaScript, so the middleware raises `EscalationRequired` and
+  points to the Playwright samples.
+- The token is never logged.
+
+Quick start:
+
+```bash
+pip install -e .
+pip install -r examples/scrapy/requirements.txt
+scrapy runspider examples/scrapy/spider.py
+```
+
+See settings, proxy requirements and limitations in
+[examples/scrapy/README.md](examples/scrapy/README.md).
 
 ---
 
