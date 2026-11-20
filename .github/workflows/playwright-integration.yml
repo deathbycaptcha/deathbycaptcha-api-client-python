@@ -26,7 +26,7 @@ jobs:
         pip install -e .
         pip install pytest pytest-cov playwright
         for attempt in 1 2 3; do
-          if playwright install --with-deps chromium; then break; fi
+          if playwright install chromium; then break; fi
           echo "Playwright install attempt $attempt failed, retrying in 20s"
           sleep 20
           if [ "$attempt" = "3" ]; then exit 1; fi
